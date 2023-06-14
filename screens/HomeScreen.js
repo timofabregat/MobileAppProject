@@ -1,14 +1,105 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
+const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text>HomeScreen</Text>
+    <View style={styles.container}>
+      {/* Contenido principal */}
+      <View style={styles.content}>
+        {/* Peluquerías */}
+        <View style={styles.salonContainer}>
+          <View style={styles.salonItem}>
+            <Text style={styles.salonName}>Peluquería 1</Text>
+            <Text style={styles.salonInfo}>Dirección: Calle 123</Text>
+            <Text style={styles.salonInfo}>Teléfono: 123456789</Text>
+            <TouchableOpacity style={styles.reserveButton}>
+              <Text style={styles.reserveButtonText}>Reservar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      {/* Barra inferior fija */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.bottomBarButton}>
+          <FontAwesome name="scissors" size={24} color="black" />
+          <Text style={styles.bottomBarText}>Peluquerías</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.bottomBarButton}>
+          <FontAwesome name="calendar" size={24} color="black" />
+          <Text style={styles.bottomBarText}>Mis Reservas</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.bottomBarButton}>
+          <FontAwesome name="user" size={24} color="black" />
+          <Text style={styles.bottomBarText}>Perfil</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  salonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  salonItem: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 20,
+  },
+  salonName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  salonInfo: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  reserveButton: {
+    backgroundColor: '#f08080',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  reserveButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#cccccc',
+    paddingVertical: 10,
+  },
+  bottomBarButton: {
+    alignItems: 'center',
+  },
+  bottomBarText: {
+    fontSize: 12,
+    marginTop: 5,
+  },
+});
+

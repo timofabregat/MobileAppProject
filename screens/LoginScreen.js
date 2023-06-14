@@ -13,6 +13,14 @@ const LoginScreen = () => {
     navigation.navigate('Register');
   };
 
+  const handleLoginPress = () => {
+    // Aquí puedes agregar la lógica para autenticar al usuario
+    // ...
+
+    // Si la autenticación es exitosa, navegar a HomeScreen
+    navigation.navigate('HomeScreen');
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding' >
       <Image source={require('../assets/Logo.png')} style={styles.LoginLogo} />
@@ -23,7 +31,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => { }} style={styles.button}>
+        <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
           <Text>Login</Text>
         </TouchableOpacity>
 
