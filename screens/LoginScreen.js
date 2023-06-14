@@ -1,26 +1,33 @@
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
+
+  const navigation = useNavigation();
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const handleRegisterPress = () => {
+    navigation.navigate('Register');
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding' >
-      <Image source={require('../assets/Logo.png')} style={styles.LoginLogo}/>
+      <Image source={require('../assets/Logo.png')} style={styles.LoginLogo} />
 
       <View style={styles.inputContainer}>
-        <TextInput placeholder="email" style={styles.input} value={email} onChangeText={text => setEmail(text)}/>
-        <TextInput placeholder="password" style={styles.input} value={password} onChangeText={text => setPassword(text)} secureTextEntry/>
+        <TextInput placeholder="email" style={styles.input} value={email} onChangeText={text => setEmail(text)} />
+        <TextInput placeholder="password" style={styles.input} value={password} onChangeText={text => setPassword(text)} secureTextEntry />
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={() => { }} style={styles.button}>
           <Text>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}} style={[styles.button, styles.buttonOutline]}>
+        <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
           <Text>Register</Text>
         </TouchableOpacity>
       </View>
@@ -40,7 +47,7 @@ const styles = StyleSheet.create({
 
   LoginLogo: {
     top: '-20%',
-    
+
   },
 
   inputContainer: {
