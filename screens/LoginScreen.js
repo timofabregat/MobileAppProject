@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {auth, signIn} from '../firebase'
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -31,12 +32,19 @@ const LoginScreen = () => {
 
   
   const handleLoginPress = () => {
-    // Aquí puedes agregar la lógica para autenticar al usuario
-    // ...
-
-    // Si la autenticación es exitosa, navegar a HomeScreen
-    navigation.navigate('HomeScreen');
-  };
+    if (email === '' || password === '') {
+      Alert.alert("Error", "Por favor llenar todos los campos")
+    }
+    else {
+      signIn(auth, email, password)
+        .then(() => {
+          navigation.navigate('HomeScreen')
+        })
+        .catch(error => {
+          Alert.alert("Error", error.message)
+        })
+    }
+  }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid>
