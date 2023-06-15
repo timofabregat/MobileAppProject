@@ -1,24 +1,31 @@
-import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
+import {auth, register} from '../firebase'
 //import Modal from 'react-native-modal'
 
 const RegisterScreen = () => {
-
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
-//   const [errorModalVisible, setErrorModalVisible] = useState(false)
-//   const [errorMessage, setErrorMessage] = useState('')
+  const navigation = useNavigation()
 
   const handleRegisterPress = () => {
-    if (name === '' || email === '' || phone === '' || password === '') {
-      setErrorMessage('Por favor completa todos los campos')
-      setErrorModalVisible(true)
+    if (name === '' || email === '' || phone === '' || password === ''){
+      Alert.alert('Error', 'Por favor complete todos los datos');
       return
     }
-
-    // Resto del código para registrar en la base de datos
+    else{
+      register(auth, email, password)
+      .then(() => {
+        Alert.alert('Success', 'Registration Successful');
+        navigation.navigate('Login')
+      })
+      .catch(error => {
+        Alert.alert('Error', error.message);
+      })
+    }
   }
 
   return (
