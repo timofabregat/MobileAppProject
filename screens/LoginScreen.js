@@ -64,12 +64,13 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    flex: 1,
+    marginBottom:100,
+    marginTop:25,
     justifyContent: 'center',
   },
 
   logoContainerKeyboardOpen: {
-    flex:0.4,
+    justifyContent: 'center',
   },
 
   loginLogo: {

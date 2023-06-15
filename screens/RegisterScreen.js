@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -7,19 +7,29 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [logoContainerHeight, setLogoContainerHeight] = useState('50%');
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  const handleClickScroll = () => {
+    
+    }
 
   const handleRegisterPress = () => {
+    Keyboard.dismiss();
     // Rest of the code to register in the database
   };
 
+  const handleOutsidePress = () => {
+    Keyboard.dismiss();
+  };
+
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setLogoContainerHeight('40%');
+      setIsKeyboardOpen(true);
     });
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setLogoContainerHeight('50%');
+      setIsKeyboardOpen(false);
     });
 
     return () => {
@@ -29,20 +39,10 @@ const RegisterScreen = () => {
   }, []);
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={styles.container}
-      enableOnAndroid
-      behavior="padding"
-    >
-      <View style={[styles.logoContainer, { height: logoContainerHeight }]}>
+    <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid extraHeight={150}>
+      <View style={[styles.logoContainer, isKeyboardOpen && styles.logoContainerKeyboardOpen]}>
         <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
       </View>
-
-      <KeyboardAwareScrollView
-        style={styles.inputContainer}
-        extraScrollHeight={-40}
-        enableResetScrollToCoords={false}
-      >
         <TextInput
           placeholder="Name"
           style={styles.input}
@@ -68,14 +68,13 @@ const RegisterScreen = () => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-      </KeyboardAwareScrollView>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
           <Text>Register</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
   );
 };
 
@@ -89,22 +88,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoContainer: {
-    height: '100%',
+    flex: 2,
+    marginTop: 50,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  logoContainerKeyboardOpen: {
+    flex:1,
+    justifyContent: 'center',
+  },
   loginLogo: {
-    maxWidth: 200,
-    maxHeight: 200,
-    width: '100%',
-    height: '100%',
+    maxHeight:300,
+    maxWidth:300,
   },
   inputContainer: {
+    flex: 1,
     width: '80%',
     marginTop: 10,
   },
   input: {
+    width:'80%',
     backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 15,
@@ -112,6 +116,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
+    flex: 1,
     width: '60%',
     marginTop: 10,
     marginBottom: 100,
