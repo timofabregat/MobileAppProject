@@ -29,6 +29,15 @@ const LoginScreen = () => {
     };
   }, []);
 
+  
+  const handleLoginPress = () => {
+    // Aquí puedes agregar la lógica para autenticar al usuario
+    // ...
+
+    // Si la autenticación es exitosa, navegar a HomeScreen
+    navigation.navigate('HomeScreen');
+  };
+
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid>
       <View style={[styles.logoContainer, isKeyboardOpen && styles.logoContainerKeyboardOpen]}>
@@ -41,7 +50,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => { }} style={styles.button}>
+        <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
           <Text>Login</Text>
         </TouchableOpacity>
 
