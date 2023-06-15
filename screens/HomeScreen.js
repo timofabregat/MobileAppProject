@@ -1,10 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
+
+  const navigation = useNavigation();
+
+  const handleReservaPress = () => {
+    navigation.navigate('ReservationScreen');
+  };
+
   return (
     <View style={styles.container}>
       {/* Contenido principal */}
@@ -15,9 +24,10 @@ const HomeScreen = () => {
             <Text style={styles.salonName}>Peluquería 1</Text>
             <Text style={styles.salonInfo}>Dirección: Calle 123</Text>
             <Text style={styles.salonInfo}>Teléfono: 123456789</Text>
-            <TouchableOpacity style={styles.reserveButton}>
+            <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton} >
               <Text style={styles.reserveButtonText}>Reservar</Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </View>
