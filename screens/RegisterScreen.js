@@ -1,27 +1,42 @@
-import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image,Keyboard ,KeyboardAvoidingView, TextInput,TouchableWithoutFeedback ,TouchableOpacity, Alert,Platform } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {auth, register} from '../firebase'
 
 const RegisterScreen = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
+  const navigation = useNavigation()
+  
   const handleClickScroll = () => {
     
-    }
+  }
+  
+  const handleOutsidePress = () => {
+    Keyboard.dismiss();
+  }
 
   const handleRegisterPress = () => {
     Keyboard.dismiss();
-    // Rest of the code to register in the database
-  };
-
-  const handleOutsidePress = () => {
-    Keyboard.dismiss();
-  };
-
+    if (name === '' || email === '' || phone === '' || password === ''){
+      Alert.alert('Error', 'Por favor complete todos los datos');
+      return
+    }
+    else{
+      register(auth, email, password)
+      .then(() => {
+        Alert.alert('Success', 'Registration Successful');
+        navigation.navigate('Login')
+      })
+      .catch(error => {
+        Alert.alert('Error', error.message);
+      })
+    }
+  }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
