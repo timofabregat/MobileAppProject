@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image,Keyboard, TextInput,TouchableOpacity, Ale
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {auth, register} from '../firebase'
+import {auth, register, db, getCollectionRef, newDoc} from '../firebase'
 
 const RegisterScreen = () => {
   const [name, setName] = useState('')
@@ -32,9 +32,23 @@ const RegisterScreen = () => {
     }
     else{
       register(auth, email, password)
-      .then(() => {
-        Alert.alert('Success', 'Registration Successful');
-        navigation.navigate('Login')
+      .then((userCredential) => {
+        const userId = userCredential.user.uid
+        const usersCollection = getCollectionRef(db, "Users");
+        newDoc(usersCollection, {
+          userId,
+          name,
+          email,
+          phone,
+          isPeluqueria
+        })
+          .then(() => {
+            Alert.alert('Success', 'Registration Successful');
+            navigation.navigate('Login')
+          })
+          .catch((error) => {
+            Alert.alert('Error', error.message);
+          });
       })
       .catch(error => {
         Alert.alert('Error', error.message);
