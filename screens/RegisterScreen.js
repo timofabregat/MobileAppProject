@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image,Keyboard, TextInput,TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, Image,Keyboard, TextInput,TouchableOpacity, Alert, Switch } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -10,7 +10,11 @@ const RegisterScreen = () => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [isPeluqueria, setIsPeluqueria] = useState(false)
+
   const navigation = useNavigation()
+
+  const toggleSwitch = () => setIsPeluqueria(previousState => !previousState);
   
   const handleClickScroll = () => {
     
@@ -84,6 +88,19 @@ const RegisterScreen = () => {
           secureTextEntry
         />
 
+        <View style={styles.containerSwitch}>
+          <Switch
+            trackColor={{false: '#black', true: '#ffe4b5'}}
+            thumbColor={isPeluqueria ? '#black' : '#black'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isPeluqueria}
+          />
+          <View style={styles.switchTextContainer}>
+            <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+          </View>
+        </View>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
           <Text>Register</Text>
@@ -133,7 +150,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     width: '60%',
-    marginTop: 10,
+    marginTop: '9%',
     marginBottom: 100,
   },
   button: {
@@ -143,4 +160,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  containerSwitch: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: '7%',
+    width: '80%',
+  },
+  switchTextContainer: {
+    marginLeft: 10,
+  },
+  switchText: {
+    fontSize: 16,
+  },
+  
 });
