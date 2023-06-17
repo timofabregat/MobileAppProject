@@ -112,7 +112,7 @@ const RegisterScreen = () => {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-            <Text>Register</Text>
+            <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -160,6 +160,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
   },
   containerSwitch: {
     flexDirection: 'row',
