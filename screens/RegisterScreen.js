@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData } from '../firebase';
 
@@ -61,7 +61,7 @@ const RegisterScreen = () => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
       </View>
@@ -110,13 +110,13 @@ const RegisterScreen = () => {
           <Text>Register</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f08080',
