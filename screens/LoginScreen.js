@@ -44,6 +44,7 @@ const LoginScreen = () => {
             style={styles.input}
             value={email}
             onChangeText={text => setEmail(text)}
+            autoCapitalize="none"
           />
           <TextInput
             placeholder="Password"
@@ -51,6 +52,7 @@ const LoginScreen = () => {
             value={password}
             onChangeText={text => setPassword(text)}
             secureTextEntry
+            autoCapitalize="none"
           />
         </View>
 
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
 
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginTop: 100,
   },
 
   loginLogo: {
@@ -90,20 +92,21 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     width: '80%',
-    marginTop: 10,
+    marginTop: 50,
   },
 
   input: {
     backgroundColor: 'white',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
-    marginTop: 10,
+    marginBottom: 20,
+    fontSize: 16,
   },
 
   buttonContainer: {
     width: '60%',
-    marginTop: 10,
+    marginTop: 20,
   },
 
   button: {
