@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
-    justifyContent: 'top-center', // Center content vertically
+    marginTop: '10%',
+    justifyContent: 'top-center',
   },
   salonContainer: {
     flexDirection: 'row',
