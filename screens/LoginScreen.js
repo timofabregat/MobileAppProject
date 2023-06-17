@@ -78,11 +78,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f08080',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 50,
   },
 
   logoContainer: {
     alignItems: 'center',
-    marginTop: 100,
+    marginBottom: 50,
   },
 
   loginLogo: {
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     width: '80%',
-    marginTop: 50,
+    marginTop: 30,
   },
 
   input: {
