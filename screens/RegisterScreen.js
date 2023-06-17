@@ -82,12 +82,14 @@ const RegisterScreen = () => {
             style={styles.input}
             value={email}
             onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
           />
           <TextInput
             placeholder="Phone"
             style={styles.input}
             value={phone}
             onChangeText={(text) => setPhone(text)}
+            keyboardType="numeric"
           />
           <TextInput
             placeholder="Password"
@@ -99,8 +101,8 @@ const RegisterScreen = () => {
 
           <View style={styles.containerSwitch}>
             <Switch
-              trackColor={{ false: '#000000', true: '#ffe4b5' }}
-              thumbColor={isPeluqueria ? '#000000' : '#000000'}
+              trackColor={{ false: '#ffe4b5', true: '#ffe4b5' }}
+              thumbColor={isPeluqueria ? '#f08080' : '#ffe4b5'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isPeluqueria}
