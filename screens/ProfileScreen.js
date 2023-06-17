@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../firebase';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -17,12 +18,15 @@ const ProfileScreen = () => {
     navigation.navigate('LoginScreen');
   };
 
+  const user = auth.currentUser;
+  console.log(user);
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
         <FontAwesome name="user-circle" size={100} color="black" />
-        <Text style={styles.username}>Nombre de Usuario</Text>
-        <Text style={styles.email}>Usuario@example.com</Text>
+        <Text style={styles.username} id='username'>{user.displayName}</Text>
+        <Text style={styles.email} id='email'>{user.email}</Text>
       </View>
 
       <View style={styles.buttonContainer}>
