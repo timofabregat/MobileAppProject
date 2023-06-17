@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, signIn } from '../firebase';
 
@@ -55,8 +55,7 @@ const LoginScreen = () => {
             autoCapitalize="none"
           />
         </View>
-
-        <View style={styles.buttonContainer}>
+        <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
@@ -64,7 +63,7 @@ const LoginScreen = () => {
           <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
             <Text style={styles.buttonOutlineText}>Register</Text>
           </TouchableOpacity>
-        </View>
+          </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
