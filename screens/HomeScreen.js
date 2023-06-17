@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationContainer } from '@react-navigation/native';
 
 
 const { width } = Dimensions.get('window');
@@ -34,15 +34,18 @@ const HomeScreen = () => {
 
       {/* Barra inferior fija */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.bottomBarButton}>
+        <TouchableOpacity style={styles.bottomBarButton} 
+        onPress={() => navigation.navigate('HomeScreen')}>
           <FontAwesome name="scissors" size={24} color="black" />
           <Text style={styles.bottomBarText}>Peluquerías</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton}>
+        <TouchableOpacity style={styles.bottomBarButton} 
+        onPress={() => navigation.navigate('MyReservationsScreen')}>
           <FontAwesome name="calendar" size={24} color="black" />
           <Text style={styles.bottomBarText}>Mis Reservas</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton}>
+        <TouchableOpacity style={styles.bottomBarButton}
+        onPress={() => navigation.navigate('ProfileScreen')}>
           <FontAwesome name="user" size={24} color="black" />
           <Text style={styles.bottomBarText}>Perfil</Text>
         </TouchableOpacity>
@@ -56,7 +59,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f08080',
   },
   content: {
     flex: 1,
@@ -74,18 +77,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginBottom: 20,
+    backgroundColor: '#020202',
   },
   salonName: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color:'white'
   },
   salonInfo: {
     fontSize: 16,
     marginBottom: 5,
+    color:'white'
   },
   reserveButton: {
-    backgroundColor: '#f08080',
+    backgroundColor: '#999999',
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
