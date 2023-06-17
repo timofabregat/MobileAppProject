@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
+import UserService from '../data/UserService';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = await UserService.getUserInfo(auth.currentUser.uid);
+        setUserData(user.data());
+      } catch (error) {
+        console.log('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleEditProfilePress = () => {
     navigation.navigate('EditProfileScreen');
@@ -18,15 +33,16 @@ const ProfileScreen = () => {
     navigation.navigate('LoginScreen');
   };
 
-  const user = auth.currentUser;
-  console.log(user);
-
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
         <FontAwesome name="user-circle" size={100} color="black" />
-        <Text style={styles.username} id='username'>{user.displayName}</Text>
-        <Text style={styles.email} id='email'>{user.email}</Text>
+        {userData && (
+          <>
+            <Text style={styles.username} id='username'>{userData.name}</Text>
+            <Text style={styles.email} id='email'>{userData.email}</Text>
+          </>
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
