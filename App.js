@@ -16,11 +16,11 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen options = {{ headerShown: false }} name="LoginScreen" component={LoginScreen}/>
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="ReservationScreen" component={ReservationScreen} />
-        <Stack.Screen name="MyReservationsScreen" component={MyReservationsScreen} />
-        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen options = {{ headerShown: false }} name="Register" component={RegisterScreen} />
+        <Stack.Screen options = {{ headerShown: false }} name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen options = {{ headerShown: false }} name="ReservationScreen" component={ReservationScreen} />
+        <Stack.Screen options = {{ headerShown: false }} name="MyReservationsScreen" component={MyReservationsScreen} />
+        <Stack.Screen options = {{ headerShown: false }} name="ProfileScreen" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
