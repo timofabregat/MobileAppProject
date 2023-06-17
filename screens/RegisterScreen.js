@@ -1,42 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Keyboard,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  Switch,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {
-  auth,
-  register,
-  db,
-  getCollectionRef,
-  newDoc,
-  newDocRef,
-  setDocData,
-} from '../firebase';
+import { auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData } from '../firebase';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isPeluqueria, setIsPeluqueria] = useState(false);
 
   const navigation = useNavigation();
 
   const toggleSwitch = () => setIsPeluqueria((previousState) => !previousState);
-
-  const handleOutsidePress = () => {
-    Keyboard.dismiss();
-  };
 
   const handleRegisterPress = () => {
     Keyboard.dismiss();
@@ -70,26 +46,22 @@ const RegisterScreen = () => {
   };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardOpen(true);
+    Keyboard.addListener('keyboardDidShow', () => {
+      // Handle keyboard show event
     });
 
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardOpen(false);
+    Keyboard.addListener('keyboardDidHide', () => {
+      // Handle keyboard hide event
     });
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
     };
   }, []);
 
   return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      contentContainerStyle={styles.scrollContentContainer}
-      behavior="padding"
-    >
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
         <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
       </View>
@@ -138,19 +110,16 @@ const RegisterScreen = () => {
           <Text>Register</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f08080',
-  },
-  scrollContentContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f08080',
   },
   logoContainer: {
     height: 200,
@@ -163,6 +132,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
+    alignItems: 'center',
   },
   input: {
     width: '100%',
@@ -173,27 +143,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    width: '80%',
+    width: '60%',
+    marginTop: '9%',
+    marginBottom: 100,
   },
   button: {
-    flex: 1,
     backgroundColor: '#ffe4b5',
+    width: '100%',
     padding: 15,
     borderRadius: 10,
-    marginVertical: 10,
+    marginBottom: 10,
   },
   containerSwitch: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '80%',
-    marginTop: 10,
+    marginTop: '7%',
+    width: '100%',
   },
   switchTextContainer: {
     marginLeft: 10,
-    flex: 1,
-    alignItems: 'flex-start',
   },
   switchText: {
     fontSize: 16,
