@@ -102,11 +102,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderTopWidth: 1,
     borderTopColor: '#cccccc',
-    paddingVertical: "4.5%", //10
+    paddingVertical: "4.5%",
   },
   bottomBarButton: {
     alignItems: 'center',
-    flex: 1, // Equal width for all buttons
+    flex: 1, 
   },
   bottomBarText: {
     fontSize: 12,
