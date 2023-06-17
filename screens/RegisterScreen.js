@@ -1,160 +1,157 @@
-import { StyleSheet, Text, View, Image,Keyboard, TextInput,TouchableOpacity, Alert, Switch } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData} from '../firebase'
+import { auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData } from '../firebase';
 
 const RegisterScreen = () => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [password, setPassword] = useState('')
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const [isPeluqueria, setIsPeluqueria] = useState(false)
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPeluqueria, setIsPeluqueria] = useState(false);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const toggleSwitch = () => setIsPeluqueria(previousState => !previousState);
-  
-  const handleClickScroll = () => {
-    
-  }
-  
-  const handleOutsidePress = () => {
-    Keyboard.dismiss();
-  }
+  const toggleSwitch = () => setIsPeluqueria((previousState) => !previousState);
 
   const handleRegisterPress = () => {
     Keyboard.dismiss();
-    if (name === '' || email === '' || phone === '' || password === ''){
+    if (name === '' || email === '' || phone === '' || password === '') {
       Alert.alert('Error', 'Por favor complete todos los datos');
-      return
-    }
-    else{
+      return;
+    } 
+    else {
+      const emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+        Alert.alert('Error', 'Por favor ingrese un email válido');
+        return;
+      }
+
       register(auth, email, password)
-      .then((userCredential) => {
-        const userId = userCredential.user.uid
-        const usersCollection = getCollectionRef(db, "Users");
-        const userDocRef = newDocRef(usersCollection, userId)
-        setDocData(userDocRef, {
-          name,
-          email,
-          phone,
-          isPeluqueria
-        })
-          .then(() => {
-            Alert.alert('Success', 'Registration Successful');
-            navigation.navigate('LoginScreen')
+        .then((userCredential) => {
+          const userId = userCredential.user.uid;
+          const usersCollection = getCollectionRef(db, 'Users');
+          const userDocRef = newDocRef(usersCollection, userId);
+          setDocData(userDocRef, {
+            name,
+            email,
+            phone,
+            isPeluqueria,
           })
-          .catch((error) => {
-            Alert.alert('Error', error.message);
-          });
-      })
-      .catch(error => {
-        Alert.alert('Error', error.message);
-      })
+            .then(() => {
+              Alert.alert('Success', 'Registration Successful');
+              navigation.navigate('LoginScreen');
+            })
+            .catch((error) => {
+              Alert.alert('Error', error.message);
+            });
+        })
+        .catch((error) => {
+          Alert.alert('Error', error.message);
+        });
     }
-  }
+  };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardOpen(true);
+    Keyboard.addListener('keyboardDidShow', () => {
+      // Handle keyboard show event
     });
 
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardOpen(false);
+    Keyboard.addListener('keyboardDidHide', () => {
+      // Handle keyboard hide event
     });
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
     };
   }, []);
 
-  return (
-    <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid extraHeight={150}>
-      <View style={[styles.logoContainer, isKeyboardOpen && styles.logoContainerKeyboardOpen]}>
-        <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
-      </View>
-        <TextInput
-          placeholder="Name"
-          style={styles.input}
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Phone"
-          style={styles.input}
-          value={phone}
-          onChangeText={(text) => setPhone(text)}
-        />
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
-        <View style={styles.containerSwitch}>
-          <Switch
-            trackColor={{false: '#black', true: '#ffe4b5'}}
-            thumbColor={isPeluqueria ? '#black' : '#black'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isPeluqueria}
+  return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Name"
+            style={styles.input}
+            value={name}
+            onChangeText={(text) => setName(text)}
           />
-          <View style={styles.switchTextContainer}>
-            <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
+          />
+          <TextInput
+            placeholder="Phone"
+            style={styles.input}
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
+            keyboardType="numeric"
+          />
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+
+          <View style={styles.containerSwitch}>
+            <Switch
+              trackColor={{ false: '#ffe4b5', true: '#ffe4b5' }}
+              thumbColor={isPeluqueria ? '#f08080' : '#ffe4b5'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isPeluqueria}
+            />
+            <View style={styles.switchTextContainer}>
+              <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+            </View>
           </View>
         </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-          <Text>Register</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      </KeyboardAwareScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
-export default RegisterScreen;
-
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#f08080',
     alignItems: 'center',
+    backgroundColor: '#f08080',
   },
   logoContainer: {
-    flex: 2,
-    marginTop: 50,
-    width: '100%',
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logoContainerKeyboardOpen: {
-    flex:1,
-    justifyContent: 'center',
-  },
   loginLogo: {
-    maxHeight:300,
-    maxWidth:300,
+    maxHeight: 300,
+    maxWidth: 300,
   },
   inputContainer: {
-    flex: 1,
     width: '80%',
-    marginTop: 10,
+    alignItems: 'center',
+    marginTop: 20,
   },
   input: {
-    width:'80%',
+    width: '100%',
     backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 15,
@@ -162,7 +159,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    flex: 1,
     width: '60%',
     marginTop: '9%',
     marginBottom: 100,
@@ -173,19 +169,28 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
   },
   containerSwitch: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: '7%',
-    width: '80%',
+    width: '100%',
   },
   switchTextContainer: {
     marginLeft: 10,
   },
   switchText: {
     fontSize: 16,
+    textAlign: 'left',
   },
-  
 });
+
+export default RegisterScreen;
