@@ -19,7 +19,14 @@ const RegisterScreen = () => {
     if (name === '' || email === '' || phone === '' || password === '') {
       Alert.alert('Error', 'Por favor complete todos los datos');
       return;
-    } else {
+    } 
+    else {
+      const emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+        Alert.alert('Error', 'Por favor ingrese un email válido');
+        return;
+      }
+
       register(auth, email, password)
         .then((userCredential) => {
           const userId = userCredential.user.uid;
