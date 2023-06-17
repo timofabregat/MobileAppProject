@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
+import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData } from '../firebase';
 
@@ -60,57 +60,63 @@ const RegisterScreen = () => {
     };
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Name"
-          style={styles.input}
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Phone"
-          style={styles.input}
-          value={phone}
-          onChangeText={(text) => setPhone(text)}
-        />
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
-        <View style={styles.containerSwitch}>
-          <Switch
-            trackColor={{ false: '#000000', true: '#ffe4b5' }}
-            thumbColor={isPeluqueria ? '#000000' : '#000000'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isPeluqueria}
+  return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Name"
+            style={styles.input}
+            value={name}
+            onChangeText={(text) => setName(text)}
           />
-          <View style={styles.switchTextContainer}>
-            <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            placeholder="Phone"
+            style={styles.input}
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
+          />
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+
+          <View style={styles.containerSwitch}>
+            <Switch
+              trackColor={{ false: '#000000', true: '#ffe4b5' }}
+              thumbColor={isPeluqueria ? '#000000' : '#000000'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isPeluqueria}
+            />
+            <View style={styles.switchTextContainer}>
+              <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+            </View>
           </View>
         </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
+            <Text>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-          <Text>Register</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
