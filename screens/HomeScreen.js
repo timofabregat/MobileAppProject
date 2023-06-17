@@ -1,13 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
-
   const navigation = useNavigation();
 
   const handleReservaPress = () => {
@@ -24,28 +22,24 @@ const HomeScreen = () => {
             <Text style={styles.salonName}>Peluquería 1</Text>
             <Text style={styles.salonInfo}>Dirección: Calle 123</Text>
             <Text style={styles.salonInfo}>Teléfono: 123456789</Text>
-            <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton} >
+            <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton}>
               <Text style={styles.reserveButtonText}>Reservar</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </View>
 
       {/* Barra inferior fija */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.bottomBarButton} 
-        onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
           <FontAwesome name="scissors" size={24} color="black" />
           <Text style={styles.bottomBarText}>Peluquerías</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton} 
-        onPress={() => navigation.navigate('MyReservationsScreen')}>
+        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
           <FontAwesome name="calendar" size={24} color="black" />
           <Text style={styles.bottomBarText}>Mis Reservas</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton}
-        onPress={() => navigation.navigate('ProfileScreen')}>
+        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
           <FontAwesome name="user" size={24} color="black" />
           <Text style={styles.bottomBarText}>Perfil</Text>
         </TouchableOpacity>
@@ -53,8 +47,6 @@ const HomeScreen = () => {
     </View>
   );
 };
-
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +56,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+    justifyContent: 'top-center', // Center content vertically
   },
   salonContainer: {
     flexDirection: 'row',
@@ -83,12 +76,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-    color:'white'
+    color: 'white',
   },
   salonInfo: {
     fontSize: 16,
     marginBottom: 5,
-    color:'white'
+    color: 'white',
   },
   reserveButton: {
     backgroundColor: '#999999',
@@ -108,10 +101,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderTopWidth: 1,
     borderTopColor: '#cccccc',
-    paddingVertical: 10,
+    paddingVertical: "4.5%", //10
   },
   bottomBarButton: {
     alignItems: 'center',
+    flex: 1, // Equal width for all buttons
   },
   bottomBarText: {
     fontSize: 12,
@@ -119,3 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
+export default HomeScreen;
