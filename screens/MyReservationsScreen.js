@@ -2,52 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
-
-
+import UserService from '../data/UserService';
+import { auth } from '../firebase';
 
 const MyReservationsScreen = () => {
   const navigation = useNavigation();
   const [reservas, setReservas] = useState([]);
 
   useEffect(() => {
-    // Aquí acceder a la base de datos para obtener las reservas
-    // y luego actualizar el estado "reservas" con los datos obtenidos
+    const fetchReservations = async () => {
+      try {
+        // Fetch reservations data from the database
+        const reservationsData = await UserService.getReservationsForUser(auth.currentUser.uid);
+        setReservas(reservationsData);
+      } catch (error) {
+        console.log('Error fetching reservations:', error);
+      }
+    };
 
-    // Ejemplo de datos de reserva
-    const datosReservas = [
-      {
-        id: 1,
-        peluqueria: 'Peluquería ABC',
-        direccion: 'Calle Principal 123',
-        telefono: '123-456-7890',
-        fecha: '2023-06-15',
-        hora: '10:00 AM',
-      },
-      {
-        id: 2,
-        peluqueria: 'Peluquería XYZ',
-        direccion: 'Avenida Central 456',
-        telefono: '987-654-3210',
-        fecha: '2023-06-16',
-        hora: '02:30 PM',
-      },
-    ];
-
-    setReservas(datosReservas);
+    fetchReservations();
   }, []);
 
   return (
     <View style={styles.container}>
-
       <View style={styles.content}>
         {reservas.map((reserva) => (
-        <View key={reserva.id} style={styles.reservaContainer}>
-          <Text style={styles.peluqueria}>{reserva.peluqueria}</Text>
-          <Text style={styles.infoText}>Dirección: {reserva.direccion}</Text>
-          <Text style={styles.infoText}>Teléfono: {reserva.telefono}</Text>
-          <Text style={styles.infoText}>Fecha: {reserva.fecha}</Text>
-          <Text style={styles.infoText}>Hora: {reserva.hora}</Text>
-        </View>
+          <View key={reserva.id} style={styles.reservaContainer}>
+            <Text style={styles.peluqueria}>{reserva.peluqueria.name}</Text>
+            <Text style={styles.infoText}>Dirección: {reserva.peluqueria.direccion}</Text>
+            <Text style={styles.infoText}>Teléfono: {reserva.phone}</Text>
+            <Text style={styles.infoText}>Fecha: {reserva.fecha}</Text>
+            <Text style={styles.infoText}>Hora: {reserva.hora}</Text>
+          </View>
         ))}
       </View>
 
