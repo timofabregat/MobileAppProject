@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {  db, getCollectionRef} from '../firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
+import AppLoader from './AppLoader';
 
 const { width } = Dimensions.get('window');
 
@@ -18,43 +19,46 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Contenido principal */}
-      <View style={styles.content}>
-        <FlatList
-          data={docs}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => 
-            <View style = {styles.salonContainer}>
-              <View style ={styles.salonItem}>
-                <Text style={styles.salonName}>{item.name}</Text>
-                <Text style={styles.salonInfo}>{item.direccion}</Text>
-                <Text style={styles.salonInfo}>{item.phone}</Text>
-                <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton}>
-                  <Text style={styles.reserveButtonText}>Reservar</Text>
-                </TouchableOpacity>
+    <>
+      {loading ? <AppLoader/> : null}
+      <View style={styles.container}>
+        {/* Contenido principal */}
+        <View style={styles.content}>
+          <FlatList
+            data={docs}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => 
+              <View style = {styles.salonContainer}>
+                <View style ={styles.salonItem}>
+                  <Text style={styles.salonName}>{item.name}</Text>
+                  <Text style={styles.salonInfo}>{item.direccion}</Text>
+                  <Text style={styles.salonInfo}>{item.phone}</Text>
+                  <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton}>
+                    <Text style={styles.reserveButtonText}>Reservar</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          }
-          showsVerticalScrollIndicator={false}
-        />
+            }
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+        {/* Barra inferior fija */}
+        <View style={styles.bottomBar}>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
+            <FontAwesome name="scissors" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Peluquerías</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
+            <FontAwesome name="calendar" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Mis Reservas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
+            <FontAwesome name="user" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Perfil</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      {/* Barra inferior fija */}
-      <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
-          <FontAwesome name="scissors" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Peluquerías</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
-          <FontAwesome name="calendar" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Mis Reservas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
-          <FontAwesome name="user" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 };
 
