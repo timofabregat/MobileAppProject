@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, signIn } from '../firebase';
+import AppLoader from './AppLoader';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleRegisterPress = () => {
     navigation.navigate('Register');
@@ -17,11 +19,14 @@ const LoginScreen = () => {
     if (email === '' || password === '') {
       Alert.alert('Error', 'Please fill in all fields');
     } else {
+      setIsLoading(true)
       signIn(auth, email, password)
         .then(() => {
+          setIsLoading(false)
           navigation.navigate('HomeScreen');
         })
         .catch(error => {
+          setIsLoading(false)
           Alert.alert('Error', error.message);
         });
     }
@@ -32,40 +37,43 @@ const LoginScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
-        </View>
+    <>
+      {isLoading ? <AppLoader/> : null}
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <View style={styles.container}>
+          <View style={styles.logoContainer}>
+            <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
+          </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            value={email}
-            onChangeText={text => setEmail(text)}
-            autoCapitalize="none"
-          />
-          <TextInput
-            placeholder="Password"
-            style={styles.input}
-            value={password}
-            onChangeText={text => setPassword(text)}
-            secureTextEntry
-            autoCapitalize="none"
-          />
-        </View>
-        <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={text => setEmail(text)}
+              autoCapitalize="none"
+            />
+            <TextInput
+              placeholder="Password"
+              style={styles.input}
+              value={password}
+              onChangeText={text => setPassword(text)}
+              secureTextEntry
+              autoCapitalize="none"
+            />
+          </View>
+          <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
-            <Text style={styles.buttonOutlineText}>Register</Text>
-          </TouchableOpacity>
-          </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+            <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
+              <Text style={styles.buttonOutlineText}>Register</Text>
+            </TouchableOpacity>
+            </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 

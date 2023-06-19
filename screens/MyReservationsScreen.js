@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import UserService from '../data/UserService';
 import { auth } from '../firebase';
+import AppLoader from './AppLoader';
 
 const MyReservationsScreen = () => {
   const navigation = useNavigation();
   const [reservas, setReservas] = useState([]);
+  const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
         // Fetch reservations data from the database
+        setLoading(true)
         const reservationsData = await UserService.getReservationsForUser(auth.currentUser.uid);
         setReservas(reservationsData);
+        setLoading(false)
       } catch (error) {
         console.log('Error fetching reservations:', error);
+        setLoading(false)
       }
     };
 
@@ -24,34 +29,54 @@ const MyReservationsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        {reservas.map((reserva) => (
-          <View key={reserva.id} style={styles.reservaContainer}>
-            <Text style={styles.peluqueria}>{reserva.peluqueria.name}</Text>
-            <Text style={styles.infoText}>Dirección: {reserva.peluqueria.direccion}</Text>
-            <Text style={styles.infoText}>Teléfono: {reserva.phone}</Text>
-            <Text style={styles.infoText}>Fecha: {reserva.fecha}</Text>
-            <Text style={styles.infoText}>Hora: {reserva.hora}</Text>
-          </View>
-        ))}
-      </View>
+    <>
+      {isLoading ? <AppLoader/> : null}
+      <View style={styles.container}>
+        {/* <View style={styles.content}>
+          {reservas.map((reserva) => (
+            <View key={reserva.id} style={styles.reservaContainer}>
+              <Text style={styles.peluqueria}>{reserva.peluqueria.name}</Text>
+              <Text style={styles.infoText}>Dirección: {reserva.peluqueria.direccion}</Text>
+              <Text style={styles.infoText}>Teléfono: {reserva.phone}</Text>
+              <Text style={styles.infoText}>Fecha: {reserva.fecha}</Text>
+              <Text style={styles.infoText}>Hora: {reserva.hora}</Text>
+            </View>
+          ))}
+        </View> */}
 
-      <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
-          <FontAwesome name="scissors" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Peluquerías</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
-          <FontAwesome name="calendar" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Mis Reservas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
-          <FontAwesome name="user" size={24} color="black" />
-          <Text style={styles.bottomBarText}>Perfil</Text>
-        </TouchableOpacity>
+        <View style={styles.content}>
+          <FlatList
+            data={reservas}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => 
+              <View key={item.id} style={styles.reservaContainer}>
+                <Text style={styles.peluqueria}>{item.peluqueria.name}</Text>
+                <Text style={styles.infoText}>Dirección: {item.peluqueria.direccion}</Text>
+              <Text style={styles.infoText}>Teléfono: {item.phone}</Text>
+              <Text style={styles.infoText}>Fecha: {item.fecha}</Text>
+              <Text style={styles.infoText}>Hora: {item.hora}</Text>
+              </View>
+            }
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+
+        <View style={styles.bottomBar}>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
+            <FontAwesome name="scissors" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Peluquerías</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
+            <FontAwesome name="calendar" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Mis Reservas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
+            <FontAwesome name="user" size={24} color="black" />
+            <Text style={styles.bottomBarText}>Perfil</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
