@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {  db, getCollectionRef} from '../firebase'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { db, getCollectionRef, getDocuments } from '../firebase';
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [salons, setSalons] = useState([]);
 
-  const query = getCollectionRef(db, "Peluquerias")
-  const [docs, loading, error] = useCollectionData(query)
+  useEffect(() => {
+    const fetchSalons = async () => {
+      const querySnapshot = await getDocuments(getCollectionRef(db, 'Peluquerias'));
+      const salonData = querySnapshot.docs.map((doc) => doc);
+      setSalons(salonData);
+    };
 
-  const handleReservaPress = () => {
-    navigation.navigate('ReservationScreen');
+    fetchSalons();
+  }, []);
+
+  const handleReservaPress = (peluqueria) => {
+    navigation.navigate('ReservationScreen', {peluqueria});
   };
 
   return (
@@ -22,20 +29,20 @@ const HomeScreen = () => {
       {/* Contenido principal */}
       <View style={styles.content}>
         <FlatList
-          data={docs}
+          data={salons}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => 
-            <View style = {styles.salonContainer}>
-              <View style ={styles.salonItem}>
-                <Text style={styles.salonName}>{item.name}</Text>
-                <Text style={styles.salonInfo}>{item.direccion}</Text>
-                <Text style={styles.salonInfo}>{item.phone}</Text>
-                <TouchableOpacity onPress={handleReservaPress} style={styles.reserveButton}>
+          renderItem={({ item }) => (
+            <View style={styles.salonContainer}>
+              <View style={styles.salonItem}>
+                <Text style={styles.salonName}>{item.data().name}</Text>
+                <Text style={styles.salonInfo}>{item.data().direccion}</Text>
+                <Text style={styles.salonInfo}>{item.data().phone}</Text>
+                <TouchableOpacity onPress={() => handleReservaPress(item)} style={styles.reserveButton}>
                   <Text style={styles.reserveButtonText}>Reservar</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          }
+          )}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -112,11 +119,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderTopWidth: 1,
     borderTopColor: '#cccccc',
-    paddingVertical: "4.5%",
+    paddingVertical: '4.5%',
   },
   bottomBarButton: {
     alignItems: 'center',
-    flex: 1, 
+    flex: 1,
   },
   bottomBarText: {
     fontSize: 12,

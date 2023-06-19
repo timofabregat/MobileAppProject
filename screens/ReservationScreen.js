@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment-timezone';
-import { getCollectionRef, newDoc, setDocData, db, getDocuments, queryDocuments, whereCondition } from '../firebase';
+import { getCollectionRef, newDoc, auth, db, getDocuments, queryDocuments, whereCondition, newDocRef, setDocData } from '../firebase';
 import UserService from '../data/UserService';
 
 
@@ -80,9 +80,10 @@ const ReservationScreen = () => {
       // Verificar si ya existe una reserva para la fecha y hora seleccionadas
       const existingReservation = await getExistingReservation(selectedDate, selectedTime);
 
-      if (existingReservation) {
+      if (!existingReservation.empty) {
+        console.log(existingReservation.data())
         // Si existe una reserva, verificar si hay lugares disponibles
-        if (existingReservation.lugaresDisponibles > 0) {
+        if (existingReservation.data().lugares > 0) {
           // Mostrar confirmación y restar un lugar disponible
           showConfirmationAlert(existingReservation);
         } else {
@@ -122,9 +123,8 @@ const ReservationScreen = () => {
 
   const createReservation = async (reservationData) => {
     try {
-      console.log(reservationData)
       const reservationRef = await newDoc(getCollectionRef(db, 'Reservas'), reservationData);
-      UserService.assignReservationToUser(auth.currentUser.uid, reservationRef)
+      await UserService.assignReservationToUser(auth.currentUser.uid, reservationRef)
       console.log('Reservation created successfully!');
       return reservationRef.id;
     } catch (error) {
@@ -149,13 +149,16 @@ const ReservationScreen = () => {
       .toDate(),
       lugares: peluqueria.data().sillas - 1,
     };
-    await createReservation(newReservation);
+    const myReservation = await createReservation(newReservation);
+    await 
     navigation.navigate('MyReservationsScreen');
   };
 
   const handleReservationConfirmed = async (existingReservation) => {
-    const updatedLugaresDisponibles = existingReservation.lugares - 1;
-    await updateLugaresDisponibles(existingReservation.id, updatedLugaresDisponibles);
+    const updatedLugaresDisponibles = existingReservation.data().lugares - 1;
+    const reserva = newDocRef(db, 'Reservas', existingReservation.id)
+    await setDocData(reserva,{lugares: updatedLugaresDisponibles}, {merge: true})
+    await UserService.assignReservationToUser(auth.currentUser.uid, reserva)
     navigation.navigate('MyReservationsScreen');
   };
 
@@ -175,25 +178,24 @@ const ReservationScreen = () => {
 
 
   const getExistingReservation = async (date, time) => {
-    console.log('AAAAAAAA', peluqueria.id)
-    const querySnapshot = await getDocuments(
-      queryDocuments(
-        getCollectionRef(db, 'reservas'),
-        whereCondition('peluqueria', '==', peluqueria.id),
-        whereCondition('fecha', '==', moment(date).hour(parseInt(time.slice(0, 2), 10))
+    console.log('ESTOY EN getExistingReservation')
+
+   const q = queryDocuments(getCollectionRef(db, 'Reservas'), 
+    whereCondition('peluqueria', '==', peluqueria.id),
+    whereCondition('fecha', '==', moment(date).hour(parseInt(time.slice(0, 2), 10))
           .minute(parseInt(time.slice(3, 5), 10))
           .second(0)
           .toDate()),
-      )
-    );
+    )
 
-    if (!querySnapshot.empty) {
-      const reservation = querySnapshot.docs[0].data();
-      reservation.id = querySnapshot.docs[0].id;
-      return reservation;
+    let querySnapshot2 = null
+    if(!q.empty){
+      const querySnapshot = await getDocuments(q);
+      querySnapshot.forEach(doc => {querySnapshot2 = doc})
+      querySnapshot.forEach(doc => {console.log(doc.data())})
     }
 
-    return null;
+    return querySnapshot2;
   };
 
   useEffect(() => {

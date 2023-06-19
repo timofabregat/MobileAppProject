@@ -27,14 +27,13 @@ const getReservationsForUser = async (uid) => {
 
 const assignReservationToUser = async (uid, reservaRef) => {
     const user = doc(db, 'Users', uid)
-    console.log(user)
-    console.log(user.reservas)
-    if (user.reservas){
-        await addDoc(user,{reservas: reservaRef}, {merge: true})
-    }else{
-        await setDoc(user,{reservas: reservaRef}, {merge: true})
-    }
-    
+    const userSnapshot = await getDoc(user)
+    const userReservas = userSnapshot.data().reservas || [];
+    console.log('USERRESEVAS1',userReservas)
+    userReservas.push(reservaRef);
+    console.log('USERRESEVAS2',userReservas)
+
+    await setDoc(user,{reservas: userReservas}, {merge: true})
 }
 
 const UserService = {
