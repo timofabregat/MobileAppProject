@@ -149,8 +149,7 @@ const ReservationScreen = () => {
       .toDate(),
       lugares: peluqueria.data().sillas - 1,
     };
-    const myReservation = await createReservation(newReservation);
-    await 
+    const myReservation = await createReservation(newReservation); 
     navigation.navigate('MyReservationsScreen');
   };
 
