@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-import { getDoc, doc, getDocs, collection, Timestamp } from 'firebase/firestore';
+import { getDoc, doc, getDocs, collection, Timestamp, setDoc, addDoc } from 'firebase/firestore';
 
 const getUserInfo = async (uid) => {
     const user = await getDoc(doc(db, 'Users', uid));
@@ -25,9 +25,22 @@ const getReservationsForUser = async (uid) => {
     return reservas;
 }
 
+const assignReservationToUser = async (uid, reservaRef) => {
+    const user = doc(db, 'Users', uid)
+    console.log(user)
+    console.log(user.reservas)
+    if (user.reservas){
+        await addDoc(user,{reservas: reservaRef}, {merge: true})
+    }else{
+        await setDoc(user,{reservas: reservaRef}, {merge: true})
+    }
+    
+}
+
 const UserService = {
     getUserInfo,
-    getReservationsForUser
+    getReservationsForUser,
+    assignReservationToUser
 }
 
 export default UserService;
