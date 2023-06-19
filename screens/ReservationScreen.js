@@ -142,7 +142,7 @@ const ReservationScreen = () => {
     console.log('lugares',peluqueria.data().sillas - 1)
 
     const newReservation = {
-      peluqueria: peluqueria.id,
+      peluqueria: newDocRef(db, 'Peluquerias', peluqueria.id),
       fecha: moment(selectedDate).hour(parseInt(selectedTime.slice(0, 2), 10))
       .minute(parseInt(selectedTime.slice(3, 5), 10))
       .second(0)
