@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
-import { getFirestore, collection, addDoc, doc, setDoc} from "firebase/firestore"
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocs, query, where} from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -31,3 +31,7 @@ export const getCollectionRef = collection
 export const newDoc = addDoc
 export const newDocRef = doc
 export const setDocData = setDoc
+export const getDocument = getDoc;
+export const getDocuments = getDocs;
+export const queryDocuments = query;
+export const whereCondition = where;
