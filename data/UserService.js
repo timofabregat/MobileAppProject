@@ -37,7 +37,7 @@ const getUserType = async (uid) => {
     if (user.get('isPeluqueria') === false) {
         return 'user'
     } else {
-        if (user.get('peluqueria') === null) {
+        if (user.get('peluqueria') === undefined) {
             return 'peluqueriaFirstTime'
         } else {
             return 'peluqueria'

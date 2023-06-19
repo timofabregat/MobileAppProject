@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Platform, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { setDoc } from '@firebase/firestore';
-import PeluqueriaService from '../../data/PeluqeriaService';
+import PeluqueriaService from '../../data/PeluqueriaService';
 import { auth } from '../../firebase';
+import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 
-const FirstLoginScreen = () => {
+const FirstLoginScreen = (props) => {
+  const { setUserType } = props;
   const navigation = useNavigation();
   const [direccion, setDireccion] = useState('');
   const [horarios, setHorarios] = useState([]);
@@ -46,6 +48,18 @@ const FirstLoginScreen = () => {
   };
 
   const handleCreateDocument = () => {
+    // check if all objects in horarios array have inicio and fin attributes
+    for (let i = 0; i < horarios.length; i++) {
+      if (!horarios[i].inicio || !horarios[i].fin) {
+        Alert.alert('Por favor, complete todos los campos');
+        return;
+      }
+    }
+    // check if all fields are filled
+    if (!direccion || horarios.length === 0 || !name || !phone || !sillas) {
+      Alert.alert('Por favor, complete todos los campos');
+      return;
+    }
     const data = {
       direccion: direccion,
       horarios: horarios,
@@ -58,9 +72,12 @@ const FirstLoginScreen = () => {
     // then navigate to BussinessInfoScreen
     PeluqueriaService.createPeluqueria(auth.currentUser.uid, data).then(
       () => {
-        navigation.navigate('BussinessInfoScreen');
+        setUserType('peluqueria');
       }
-    )
+    ).catch((error) => {
+      Alert.alert('Error:', error.message);
+    }
+    );
   };
 
   return (

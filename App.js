@@ -45,7 +45,6 @@ const PeluqueriaTabs = () => (
 const UserTabs = ({ setUserType }) => (
   <Tab.Navigator>
     <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Reservations" component={ReservationScreen} />
     <Tab.Screen name="My Reservations" component={MyReservationsScreen} />
     <Tab.Screen name="Profile">
       {(props) => <ProfileScreen {...props} setUserType={setUserType} />}
@@ -57,20 +56,18 @@ export default function App() {
   const [userType, setUserType] = useState(null); // "Peluqueria", "User" or null
 
   const handleLoginSuccess = (type) => {
-    console.log(type);
     setUserType(type); // set userType to "Peluqueria" or "User"
   };
 
   let initialScreen;
-
   if (userType === null) {
     initialScreen = (
       <AuthStack handleLoginSuccess={handleLoginSuccess} />
     );
   } else if (userType === "peluqueria") {
     initialScreen = <PeluqueriaTabs />;
-  } else if (userType === "peluqeriaFirstTime") {
-    initialScreen = <FirstLoginScreen />;
+  } else if (userType === "peluqueriaFirstTime") {
+    initialScreen = <FirstLoginScreen setUserType={setUserType} />;
   } else if (userType === "user") {
     initialScreen = <UserTabs setUserType={setUserType} />;
   }
