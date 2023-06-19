@@ -80,7 +80,7 @@ const ReservationScreen = () => {
       // Verificar si ya existe una reserva para la fecha y hora seleccionadas
       const existingReservation = await getExistingReservation(selectedDate, selectedTime);
 
-      if (!existingReservation.empty) {
+      if (existingReservation!=null) {
         console.log(existingReservation.data())
         // Si existe una reserva, verificar si hay lugares disponibles
         if (existingReservation.data().lugares > 0) {
