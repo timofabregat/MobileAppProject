@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Keyboard, TextInput, TouchableOpacity, Alert, Switch, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, register, db, getCollectionRef, newDoc, newDocRef, setDocData } from '../firebase';
+import AppLoader from './AppLoader';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
@@ -9,6 +10,7 @@ const RegisterScreen = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isPeluqueria, setIsPeluqueria] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigation = useNavigation();
 
@@ -21,8 +23,10 @@ const RegisterScreen = () => {
       return;
     } 
     else {
+      setIsLoading(true)
       const emailRegex = /\S+@\S+\.\S+/;
       if (!emailRegex.test(email)) {
+        setIsLoading(false)
         Alert.alert('Error', 'Por favor ingrese un email válido');
         return;
       }
@@ -40,13 +44,16 @@ const RegisterScreen = () => {
           })
             .then(() => {
               Alert.alert('Success', 'Registration Successful');
+              setIsLoading(false)
               navigation.navigate('LoginScreen');
             })
             .catch((error) => {
+              setIsLoading(false)
               Alert.alert('Error', error.message);
             });
         })
         .catch((error) => {
+          setIsLoading(false)
           Alert.alert('Error', error.message);
         });
     }
@@ -72,60 +79,63 @@ const RegisterScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Name"
-            style={styles.input}
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            autoCapitalize="none"
-          />
-          <TextInput
-            placeholder="Phone"
-            style={styles.input}
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            keyboardType="numeric"
-          />
-          <TextInput
-            placeholder="Password"
-            style={styles.input}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
-
-          <View style={styles.containerSwitch}>
-            <Switch
-              trackColor={{ false: '#ffe4b5', true: '#ffe4b5' }}
-              thumbColor={isPeluqueria ? '#f08080' : '#ffe4b5'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isPeluqueria}
+    <>
+      {isLoading ? <AppLoader/> : null}
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <View style={styles.container}>
+          <View style={styles.logoContainer}>
+            <Image source={require('../assets/Logo.png')} style={styles.loginLogo} />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Name"
+              style={styles.input}
+              value={name}
+              onChangeText={(text) => setName(text)}
             />
-            <View style={styles.switchTextContainer}>
-              <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              autoCapitalize="none"
+            />
+            <TextInput
+              placeholder="Phone"
+              style={styles.input}
+              value={phone}
+              onChangeText={(text) => setPhone(text)}
+              keyboardType="numeric"
+            />
+            <TextInput
+              placeholder="Password"
+              style={styles.input}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+
+            <View style={styles.containerSwitch}>
+              <Switch
+                trackColor={{ false: '#ffe4b5', true: '#ffe4b5' }}
+                thumbColor={isPeluqueria ? '#f08080' : '#ffe4b5'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isPeluqueria}
+              />
+              <View style={styles.switchTextContainer}>
+                <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+              </View>
             </View>
           </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
+              <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-            <Text style={styles.buttonText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 

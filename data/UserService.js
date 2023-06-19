@@ -14,6 +14,7 @@ const getReservationsForUser = async (uid) => {
     for (let reserva of reservas_raw) {
         const reservaInfo = await getDoc(doc(db, 'Reservas', reserva.id))
         reserva = {
+            id : reservaInfo.id,
             fecha : Timestamp.fromMillis(reservaInfo.get('fecha').seconds * 1000 + reservaInfo.get('fecha').nanoseconds / 1000000).toDate().toLocaleDateString(),
             hora : Timestamp.fromMillis(reservaInfo.get('fecha').seconds * 1000 + reservaInfo.get('fecha').nanoseconds / 1000000).toDate().toLocaleTimeString(),
             phone : user.get('phone'),
