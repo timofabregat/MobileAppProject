@@ -25,6 +25,26 @@ const getReservationsForUser = async (uid) => {
     return reservas;
 }
 
+const getPeluqueriaInfo = async (uid) => {
+    const user = await getUserInfo(uid)
+    const peluqueriaRef = user.get('peluqueria')
+    const peluqueria = await getDoc(peluqueriaRef)
+    return peluqueria;
+}
+
+const getUserType = async (uid) => {
+    const user = await getUserInfo(uid)
+    if (user.get('isPeluqueria') === false) {
+        return 'user'
+    } else {
+        if (user.get('peluqueria') === undefined) {
+            return 'peluqueriaFirstTime'
+        } else {
+            return 'peluqueria'
+        }
+    }
+}
+
 const assignReservationToUser = async (uid, reservaRef) => {
     const user = doc(db, 'Users', uid)
     const userSnapshot = await getDoc(user)
@@ -39,6 +59,8 @@ const assignReservationToUser = async (uid, reservaRef) => {
 const UserService = {
     getUserInfo,
     getReservationsForUser,
+    getPeluqueriaInfo,
+    getUserType,
     assignReservationToUser
 }
 

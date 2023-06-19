@@ -5,7 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import UserService from '../data/UserService';
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
+  const { setUserType } = props;
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -30,7 +31,7 @@ const ProfileScreen = () => {
       'Are you sure you want to logout?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', onPress: () => navigation.navigate('LoginScreen') },
+        { text: 'Logout', onPress: () => setUserType(null) },
       ],
       { cancelable: true }
     );

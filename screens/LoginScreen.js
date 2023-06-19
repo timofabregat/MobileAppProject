@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, signIn } from '../firebase';
+import UserService from '../data/UserService';
+import { async } from '@firebase/util';
 import AppLoader from './AppLoader';
 
-const LoginScreen = () => {
+const LoginScreen = (props) => {
+  const { handleLoginSuccess } = props;
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -12,7 +15,7 @@ const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleRegisterPress = () => {
-    navigation.navigate('Register');
+    navigation.navigate('RegisterScreen');
   };
 
   const handleLoginPress = () => {
@@ -22,15 +25,24 @@ const LoginScreen = () => {
       setIsLoading(true)
       signIn(auth, email, password)
         .then(() => {
-          setIsLoading(false)
-          navigation.navigate('HomeScreen');
+          UserService.getUserType(auth.currentUser.uid)
+            .then((type) => {
+              setIsLoading(false)
+              handleLoginSuccess(type);
+            })
+            .catch((error) => {
+              setIsLoading(false)
+              console.log(error);
+            }
+            );
         })
-        .catch(error => {
-          setIsLoading(false)
+        .catch((error) => {
           Alert.alert('Error', error.message);
         });
     }
   };
+
+
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
