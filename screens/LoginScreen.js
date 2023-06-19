@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, signIn } from '../firebase';
+import UserService from '../data/UserService';
+import HomeScreen from './HomeScreen';
+import { async } from '@firebase/util';
 
-const LoginScreen = () => {
+const LoginScreen = (props) => {
+  const { handleLoginSuccess } = props;
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegisterPress = () => {
-    navigation.navigate('Register');
+    navigation.navigate('RegisterScreen');
   };
 
   const handleLoginPress = () => {
@@ -19,13 +23,22 @@ const LoginScreen = () => {
     } else {
       signIn(auth, email, password)
         .then(() => {
-          navigation.navigate('HomeScreen');
+          UserService.getUserType(auth.currentUser.uid)
+            .then((type) => {
+              handleLoginSuccess(type);
+            })
+            .catch((error) => {
+              console.log(error);
+            }
+            );
         })
-        .catch(error => {
+        .catch((error) => {
           Alert.alert('Error', error.message);
         });
     }
   };
+
+
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -43,19 +56,22 @@ const LoginScreen = () => {
             placeholder="Email"
             style={styles.input}
             value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={(text) => setEmail(text)}
             autoCapitalize="none"
           />
           <TextInput
             placeholder="Password"
             style={styles.input}
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
             secureTextEntry
             autoCapitalize="none"
           />
         </View>
-        <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardAvoidingView
+          style={styles.buttonContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
           <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
@@ -63,7 +79,7 @@ const LoginScreen = () => {
           <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
             <Text style={styles.buttonOutlineText}>Register</Text>
           </TouchableOpacity>
-          </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
