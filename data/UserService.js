@@ -29,11 +29,9 @@ const assignReservationToUser = async (uid, reservaRef) => {
     const user = doc(db, 'Users', uid)
     const userSnapshot = await getDoc(user)
     const userReservas = userSnapshot.data().reservas || [];
-    console.log('USERRESEVAS1',userReservas)
     userReservas.push(reservaRef);
-    console.log('USERRESEVAS2',userReservas)
-
     await setDoc(user,{reservas: userReservas}, {merge: true})
+    console.log('Reserva Asignada al Usuario ', uid)
 }
 
 const UserService = {

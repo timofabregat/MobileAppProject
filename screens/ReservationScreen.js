@@ -5,8 +5,9 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment-timezone';
-import { getCollectionRef, newDoc, auth, db, getDocuments, getDocument, queryDocuments, whereCondition, newDocRef, setDocData } from '../firebase';
+import { auth } from '../firebase';
 import UserService from '../data/UserService';
+import ReservaService from '../data/ReservaService';
 
 
 const ReservationScreen = () => {
@@ -78,7 +79,7 @@ const ReservationScreen = () => {
   const checkAvailability = async () => {
     try {
       // Verificar si ya existe una reserva para la fecha y hora seleccionadas
-      const existingReservation = await getExistingReservation(selectedDate, selectedTime);
+      const existingReservation = await ReservaService.getReservaOrNull(selectedDate, selectedTime,peluqueria);
 
       if (existingReservation!=null) {
         console.log(existingReservation.id)
@@ -121,41 +122,17 @@ const ReservationScreen = () => {
     );
   };
 
-  const createReservation = async (reservationData) => {
-    try {
-      const reservationRef = await newDoc(getCollectionRef(db, 'Reservas'), reservationData);
-      await UserService.assignReservationToUser(auth.currentUser.uid, reservationRef)
-      console.log('Reservation created successfully!');
-      return reservationRef.id;
-    } catch (error) {
-      console.error('Error creating reservation:', error);
-      throw new Error('Failed to create reservation');
-    }
-  };
 
   const handleNewReservationConfirmed = async () => {
     console.log('CREANDO NUEVA RESERVA...')
-
-    const newReservation = {
-      peluqueria: newDocRef(db, 'Peluquerias', peluqueria.id),
-      fecha: moment(selectedDate).hour(parseInt(selectedTime.slice(0, 2), 10))
-      .minute(parseInt(selectedTime.slice(3, 5), 10))
-      .second(0)
-      .toDate(),
-      lugares: peluqueria.data().sillas - 1,
-      users: [newDocRef(db, 'Users', auth.currentUser.uid)],
-    };
-    const myReservation = await createReservation(newReservation); 
+    const myReservation = await ReservaService.createReserva(selectedDate,selectedTime,peluqueria,auth.currentUser.uid)
+    await UserService.assignReservationToUser(auth.currentUser.uid, myReservation) 
     navigation.navigate('MyReservationsScreen');
   };
 
   const handleReservationConfirmed = async (existingReservation) => {
-    const updatedLugaresDisponibles = existingReservation.data().lugares - 1;
-    reservaUsers = existingReservation.data().users// || [];
-    console.log(existingReservation.data().users)
-    reservaUsers.push(newDocRef(db, 'Users', auth.currentUser.uid));
-    reserva = newDocRef(db, 'Reservas', existingReservation.id)
-    await setDocData(reserva,{lugares: updatedLugaresDisponibles, users: reservaUsers}, {merge: true})  
+    console.log('MODIFICANDO RESERVA EXISTENTE...')
+    const reserva = await ReservaService.updateReserva(existingReservation)
     await UserService.assignReservationToUser(auth.currentUser.uid, reserva)
     navigation.navigate('MyReservationsScreen');
   };
@@ -172,29 +149,6 @@ const ReservationScreen = () => {
     const updatedMinutes = String(date.getMinutes()).padStart(2, '0');
 
     return `${updatedHours}:${updatedMinutes}`;
-  };
-
-
-  const getExistingReservation = async (date, time) => {
-    console.log('ESTOY EN getExistingReservation')
-
-  const peluqueriaRef = newDocRef(db, 'Peluquerias', peluqueria.id)
-  const q = queryDocuments(getCollectionRef(db, 'Reservas'), 
-              whereCondition('peluqueria', '==', peluqueriaRef),
-              whereCondition('fecha', '==', moment(date).hour(parseInt(time.slice(0, 2), 10))
-                    .minute(parseInt(time.slice(3, 5), 10))
-                    .second(0)
-                    .toDate()),
-              )
-
-    let querySnapshot2 = null
-    if(!q.empty){
-      const querySnapshot = await getDocuments(q);
-      querySnapshot.forEach(doc => {querySnapshot2 = doc})
-      querySnapshot.forEach(doc => {console.log(doc.data())})
-    }
-
-    return querySnapshot2;
   };
 
   useEffect(() => {
