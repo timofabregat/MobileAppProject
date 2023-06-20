@@ -4,12 +4,16 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { db, getCollectionRef, getDocuments } from '../firebase';
 import AppLoader from './AppLoader';
+import ReservationScreen from './ReservationScreen';
+import { set } from 'date-fns';
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [salons, setSalons] = useState([]);
+  const [reservar, setReservar] = useState(false);
+  const [peluqueria, setPeluqueria] = useState(null);
 
   useEffect(() => {
     const fetchSalons = async () => {
@@ -22,10 +26,12 @@ const HomeScreen = () => {
   }, []);
 
   const handleReservaPress = (peluqueria) => {
-    navigation.navigate('ReservationScreen', {peluqueria});
+    console.log(peluqueria);
+    setPeluqueria(peluqueria);
+    setReservar(true);
   };
 
-  return (
+  const screen = (
     <>
       <View style={styles.container}>
         {/* Contenido principal */}
@@ -66,7 +72,18 @@ const HomeScreen = () => {
       </View>
     </>
   );
+
+  let loadedScreen
+
+  if (reservar === false) {
+    loadedScreen = screen
+  } else {
+    loadedScreen = <ReservationScreen setReservar={setReservar} peluqueria={peluqueria} />
+  }
+  
+  return loadedScreen
 };
+
 
 const styles = StyleSheet.create({
   container: {
