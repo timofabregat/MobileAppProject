@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PeluqueriaService from '../../data/PeluqueriaService';
 import { auth } from '../../firebase';
@@ -29,31 +29,33 @@ const OwnerReservationsScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Reservas</Text>
-            {reservations.map((reservation, index) => (
-                <View style={styles.card}>
-                    <View style={styles.textContainer}>
-                        <View style={styles.dateContainer}>
-                            <Icon name="calendar" size={20} color="#333" style={styles.icon} />
-                            <Text style={styles.date}>{new Date(reservation.fecha.seconds * 1000).toLocaleDateString('es-ES', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}</Text>
+            <ScrollView>
+                {reservations.map((reservation, index) => (
+                    <View style={styles.card} key={index}>
+                        <View style={styles.textContainer}>
+                            <View style={styles.dateContainer}>
+                                <Icon name="calendar" size={20} color="#333" style={styles.icon} />
+                                <Text style={styles.date}>{new Date(reservation.fecha.seconds * 1000).toLocaleDateString('es-ES', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}</Text>
+                            </View>
+                            <View style={styles.timeContainer}>
+                                <Icon name="clock-o" size={20} color="#333" style={styles.icon} />
+                                <Text style={styles.time}>Hora: {new Date(reservation.fecha.seconds * 1000).toLocaleTimeString('en-CA', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</Text>
+                            </View>
                         </View>
-                        <View style={styles.timeContainer}>
-                            <Icon name="clock-o" size={20} color="#333" style={styles.icon} />
-                            <Text style={styles.time}>Hora: {new Date(reservation.fecha.seconds * 1000).toLocaleTimeString('en-CA', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}</Text>
+                        <View style={styles.lugaresContainer}>
+                            <Text style={styles.lugaresLabel}>Lugares</Text>
+                            <Text style={styles.lugaresNumber}>{reservation.lugares}</Text>
                         </View>
                     </View>
-                    <View style={styles.lugaresContainer}>
-                        <Text style={styles.lugaresLabel}>Lugares</Text>
-                        <Text style={styles.lugaresNumber}>{reservation.lugares}</Text>
-                    </View>
-                </View>
-            ))}
+                ))}
+            </ScrollView>
         </SafeAreaView>
     );
 };

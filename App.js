@@ -14,6 +14,7 @@ import ProfileScreen from './screens/ProfileScreen.js';
 import FirstLoginScreen from './screens/owner/FirstLoginScreen';
 import BussinessInfoScreen from './screens/owner/BussinessInfoScreen';
 import OwnerReservationsScreen from './screens/owner/OwnerRerservationsScreen';
+import EditBussinessProfile from './screens/owner/EditBussinessProfile';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,7 +36,7 @@ const AuthStack = ({ handleLoginSuccess }) => (
   </Stack.Navigator>
 );
 
-const PeluqueriaTabs = () => (
+const PeluqueriaTabs = ({ setEdit }) => (
   <Tab.Navigator>
     <Tab.Screen options={{ headerShown: false }} name="BussinessInfoScreen" component={BussinessInfoScreen} />
     <Tab.Screen options={{ headerShown: false }} name="OwnerReservationsScreen" component={OwnerReservationsScreen} />
@@ -49,6 +50,7 @@ const UserTabs = ({ setUserType }) => (
     <Tab.Screen name="Profile">
       {(props) => <ProfileScreen {...props} setUserType={setUserType} />}
     </Tab.Screen>
+    <Tab.Screen isVisible={false} name="ReservationScreen" component={ReservationScreen} />
   </Tab.Navigator>
 );
 
@@ -65,7 +67,7 @@ export default function App() {
       <AuthStack handleLoginSuccess={handleLoginSuccess} />
     );
   } else if (userType === "peluqueria") {
-    initialScreen = <PeluqueriaTabs />;
+    initialScreen = <PeluqueriaTabs/>;
   } else if (userType === "peluqueriaFirstTime") {
     initialScreen = <FirstLoginScreen setUserType={setUserType} />;
   } else if (userType === "user") {
