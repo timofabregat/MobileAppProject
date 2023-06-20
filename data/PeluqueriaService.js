@@ -28,10 +28,15 @@ const getPeluqueriaInfo = async (ref) => {
     return peluqueria
 }
 
+const updatePeluqueriaInfo = async (ref, data) => {
+    await setDoc(ref, data, { merge: true })
+}
+
 PeluqueriaService = {
     createPeluqueria,
     getReservationsForPeluqueria,
-    getPeluqueriaInfo
+    getPeluqueriaInfo,
+    updatePeluqueriaInfo
 }
 
 export default PeluqueriaService;
