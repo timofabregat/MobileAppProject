@@ -10,7 +10,8 @@ import UserService from '../data/UserService';
 import ReservaService from '../data/ReservaService';
 
 
-const ReservationScreen = () => {
+const ReservationScreen = (props) => {
+  const { peluqueria, setReservar } = props
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -18,10 +19,7 @@ const ReservationScreen = () => {
   const [selectedDateText, setSelectedDateText] = useState('Seleccionar fecha');
   const [horarios, setHorarios] = useState([]);
 
-  const navigation = useNavigation();
 
-  const route = useRoute();
-  const { peluqueria } = route.params;
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -127,14 +125,14 @@ const ReservationScreen = () => {
     console.log('CREANDO NUEVA RESERVA...')
     const myReservation = await ReservaService.createReserva(selectedDate,selectedTime,peluqueria,auth.currentUser.uid)
     await UserService.assignReservationToUser(auth.currentUser.uid, myReservation) 
-    navigation.navigate('MyReservationsScreen');
+    setReservar(false)
   };
 
   const handleReservationConfirmed = async (existingReservation) => {
     console.log('MODIFICANDO RESERVA EXISTENTE...')
     const reserva = await ReservaService.updateReserva(existingReservation)
     await UserService.assignReservationToUser(auth.currentUser.uid, reserva)
-    navigation.navigate('MyReservationsScreen');
+    setReservar(false)
   };
 
   const addMinutes = (timeString, minutes) => {
