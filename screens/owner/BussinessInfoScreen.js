@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 20,
         marginTop: 20,
-        alignSelf: 'center',
+        // alignSelf: 'center',
     },
     editButtonText: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: '#f08080',
         textAlign: 'center',

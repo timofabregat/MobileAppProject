@@ -45,24 +45,6 @@ const getUserType = async (uid) => {
     }
 }
 
-const cancelUserReservation = async (uid, reserva) => {
-    const reservaRef =  await getDoc(doc(db, 'Reservas', reserva.id))
-    user = doc(db, 'Users', uid)
-    const userSnapshot = await getDoc(user)
-    const userReservas = userSnapshot.get('reservas')
-    let i
-    userReservas.forEach((userReserva, index) => {
-        console.log(userReserva.path + ' ' + index);
-        if(userReserva.id == reservaRef.id){
-            i = index
-            console.log(i)
-        }
-    })
-    userReservas.splice(i,1)
-    await setDoc(user,{reservas: userReservas}, {merge: true})
-    console.log('Reserva Eliminada del Usuario ', uid)
-}
-
 const assignReservationToUser = async (uid, reservaRef) => {
     const user = doc(db, 'Users', uid)
     const userSnapshot = await getDoc(user)
@@ -77,7 +59,6 @@ const UserService = {
     getReservationsForUser,
     getPeluqueriaInfo,
     getUserType,
-    cancelUserReservation,
     assignReservationToUser
 }
 

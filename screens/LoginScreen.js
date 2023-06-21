@@ -20,7 +20,7 @@ const LoginScreen = (props) => {
 
   const handleLoginPress = () => {
     if (email === '' || password === '') {
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert('Error', 'Por favor complete todos los datos');
     } else {
       setIsLoading(true)
       signIn(auth, email, password)
@@ -38,12 +38,11 @@ const LoginScreen = (props) => {
         })
         .catch((error) => {
           setIsLoading(false)
-          Alert.alert('Error', error.message);
+          Alert.alert('Error', "Usuario y/o contraseña incorrectos. Por favor intente nuevamente.");
+          console.log(error)
         });
     }
   };
-
-
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -59,14 +58,14 @@ const LoginScreen = (props) => {
 
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Email"
+              placeholder="Correo electrónico"
               style={styles.input}
               value={email}
               onChangeText={text => setEmail(text)}
               autoCapitalize="none"
             />
             <TextInput
-              placeholder="Password"
+              placeholder="Contraseña"
               style={styles.input}
               value={password}
               onChangeText={text => setPassword(text)}
@@ -76,12 +75,15 @@ const LoginScreen = (props) => {
           </View>
           <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
-              <Text style={styles.buttonOutlineText}>Register</Text>
-            </TouchableOpacity>
+            <View style={styles.messageContainer}>
+                <Text>¿No tienes una cuenta aún? </Text>
+                <TouchableOpacity onPress={handleRegisterPress}>
+                    <Text style={styles.linkText}>Registrarse</Text>
+                </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
           {isLoading && <AppLoader />}
         </View>
@@ -98,11 +100,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f08080',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 50,
   },
 
   logoContainer: {
     alignItems: 'center',
+    marginTop: 50,
     marginBottom: 50,
   },
 
@@ -113,20 +115,19 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     width: '80%',
-    marginTop: 30,
   },
 
   input: {
     backgroundColor: 'white',
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     fontSize: 16,
   },
 
   buttonContainer: {
-    width: '60%',
+    width: '80%',
     marginTop: 20,
   },
 
@@ -155,4 +156,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
+  linkText: {
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+
+  messageContainer: {
+    marginTop: 10,
+    justifyContent: 'center',
+    gap: 5,
+    flexDirection: 'row',
+  }
 });
