@@ -16,6 +16,10 @@ const RegisterScreen = () => {
 
   const toggleSwitch = () => setIsPeluqueria((previousState) => !previousState);
 
+  const handleLoginPress = () => {
+    navigation.navigate('LoginScreen');
+  };
+
   const handleRegisterPress = () => {
     Keyboard.dismiss();
     if (name === '' || email === '' || phone === '' || password === '') {
@@ -88,27 +92,27 @@ const RegisterScreen = () => {
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Name"
+              placeholder="Nombre"
               style={styles.input}
               value={name}
               onChangeText={(text) => setName(text)}
             />
             <TextInput
-              placeholder="Email"
+              placeholder="Correo electrónico"
               style={styles.input}
               value={email}
               onChangeText={(text) => setEmail(text)}
               autoCapitalize="none"
             />
             <TextInput
-              placeholder="Phone"
+              placeholder="Celular"
               style={styles.input}
               value={phone}
               onChangeText={(text) => setPhone(text)}
               keyboardType="numeric"
             />
             <TextInput
-              placeholder="Password"
+              placeholder="Contraseña"
               style={styles.input}
               value={password}
               onChangeText={(text) => setPassword(text)}
@@ -124,15 +128,21 @@ const RegisterScreen = () => {
                 value={isPeluqueria}
               />
               <View style={styles.switchTextContainer}>
-                <Text style={styles.switchText}>¿Desea registrarse como peluqueria?</Text>
+                <Text style={styles.switchText}>¿Desea registrarse como peluquería?</Text>
               </View>
             </View>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-              <Text style={styles.buttonText}>Register</Text>
+              <Text style={styles.buttonText}>Registrarme</Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.messageContainer}>
+                <Text>¿Ya tienes una cuenta? </Text>
+                <TouchableOpacity onPress={handleLoginPress}>
+                    <Text style={styles.linkText}>Iniciar sesión</Text>
+                </TouchableOpacity>
+            </View>
         </View>
       </TouchableWithoutFeedback>
     </>
@@ -148,30 +158,29 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 200,
   },
   loginLogo: {
-    maxHeight: 300,
-    maxWidth: 300,
+    height: '100%',
+    width: '100%',
   },
   inputContainer: {
     width: '80%',
-    alignItems: 'center',
     marginTop: 20,
   },
   input: {
-    width: '100%',
     backgroundColor: 'white',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 10,
-    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 16,
   },
   buttonContainer: {
-    width: '60%',
-    marginTop: '9%',
-    marginBottom: 100,
+    width: '80%',
+    marginTop: 10,
+    // marginTop: 20,
+    // marginBottom: 100,
   },
   button: {
     backgroundColor: '#ffe4b5',
@@ -183,23 +192,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: 'black',
   },
   containerSwitch: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: '7%',
+    marginTop: 5,
+    marginBottom: 5,
     width: '100%',
   },
   switchTextContainer: {
     marginLeft: 10,
   },
   switchText: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
+  },
+
+
+  linkText: {
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+
+  messageContainer: {
+    marginTop: 10,
+    justifyContent: 'center',
+    gap: 5,
+    flexDirection: 'row',
   },
 });
 

@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import PeluqueriaService from '../../data/PeluqueriaService';
+import { ScrollView } from 'react-native';
+import HorarioRow from '../../components/HorarioRow';
 
 const FirstLoginScreen = (props) => {
   const { setEdit, peluqueria } = props;
@@ -13,11 +15,11 @@ const FirstLoginScreen = (props) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [sillas, setSillas] = useState(1)
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [selectedHorarioIndex, setSelectedHorarioIndex] = useState(null);
-  const [selectedField, setSelectedField] = useState('');
-  const [selectedTime, setSelectedTime] = useState(new Date());
-  const [showSillas, setShowSillas] = useState(false);
+//   const [showTimePicker, setShowTimePicker] = useState(false);
+//   const [selectedHorarioIndex, setSelectedHorarioIndex] = useState(null);
+//   const [selectedField, setSelectedField] = useState('');
+//   const [selectedTime, setSelectedTime] = useState(new Date());
+//   const [showSillas, setShowSillas] = useState(false);
 
   useEffect(() => {
     data = peluqueria.data();
@@ -30,6 +32,18 @@ const FirstLoginScreen = (props) => {
     }
   }, []); // Empty dependency array ensures that this effect only runs once when the component mounts.
 
+  const handleAddSilla = () => {
+    if(sillas < 10) {
+        setSillas(prev => Number(prev) + 1);
+    }
+  }
+
+  const handleRemoveSilla = () => {
+    if(sillas > 1) {
+        setSillas(prev => Number(prev) - 1);
+    }
+  }
+
   const handleAddHorario = () => {
     setHorarios([...horarios, { inicio: '', fin: '' }]);
   };
@@ -41,20 +55,19 @@ const FirstLoginScreen = (props) => {
   };
 
   const handleHorarioChange = (index, field) => {
-    setSelectedHorarioIndex(index);
-    setSelectedField(field);
-    setShowTimePicker(true);
+    // setSelectedHorarioIndex(index);
+    // setSelectedField(field);
+    // setShowTimePicker(true);
   };
 
-  const handleTimePickerConfirm = (event, selectedTime) => {
-    if (event.type === 'set') { // check if the type is 'set', indicating that a time has been selected
-      const time = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const updatedHorarios = [...horarios];
-      updatedHorarios[selectedHorarioIndex][selectedField] = time;
-      setHorarios(updatedHorarios);
-      setSelectedTime(selectedTime);
-    }
-    setShowTimePicker(false);
+  const handleTimePickerConfirm = (selectedHorarioIndex, selectedTime, selectedField) => {
+    const time = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const updatedHorarios = [...horarios];
+    updatedHorarios[selectedHorarioIndex][selectedField] = time;
+    setHorarios(updatedHorarios);
+    // setSelectedTime(selectedTime);
+
+    // setShowTimePicker(false);
   };
 
   const handleCreateDocument = () => {
@@ -90,8 +103,12 @@ const FirstLoginScreen = (props) => {
     );
   };
 
+  const handleCancel = () => {
+    setEdit('bussiness');
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.label}>Dirección</Text>
         <TextInput
@@ -102,30 +119,36 @@ const FirstLoginScreen = (props) => {
 
         <Text style={styles.label}>Horarios</Text>
         {horarios.map((horario, index) => (
-          <View key={index} style={styles.horarioContainer}>
-            <View style={styles.horarioRow}>
-              <TouchableOpacity
-                style={styles.horarioInput}
-                onPress={() => handleHorarioChange(index, 'inicio')}
-              >
-                <Text>{horario.inicio || 'Seleccione inicio'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.horarioInput}
-                onPress={() => handleHorarioChange(index, 'fin')}
-              >
-                <Text>{horario.fin || 'Seleccione fin'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleRemoveHorario(index)}
-              >
-                <Text style={styles.deleteButtonText}>-</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+            <HorarioRow horario={horario}
+            key={index}
+            index={index}
+            handleHorarioChange={handleHorarioChange}
+            handleRemoveHorario={handleRemoveHorario}
+            handleTimePickerConfirm={handleTimePickerConfirm} />
+        //   <View key={index} style={styles.horarioContainer}>
+        //     <View style={styles.horarioRow}>
+        //       <TouchableOpacity
+        //         style={styles.horarioInput}
+        //         onPress={() => handleHorarioChange(index, 'inicio')}
+        //       >
+        //         <Text>{horario.inicio || 'Seleccione inicio'}</Text>
+        //       </TouchableOpacity>
+        //       <TouchableOpacity
+        //         style={styles.horarioInput}
+        //         onPress={() => handleHorarioChange(index, 'fin')}
+        //       >
+        //         <Text>{horario.fin || 'Seleccione fin'}</Text>
+        //       </TouchableOpacity>
+        //       <TouchableOpacity
+        //         style={styles.deleteButton}
+        //         onPress={() => handleRemoveHorario(index)}
+        //       >
+        //         <Text style={styles.deleteButtonText}>-</Text>
+        //       </TouchableOpacity>
+        //     </View>
+        //   </View>
         ))}
-        {showTimePicker && (
+        {/* {showTimePicker && (
           <DateTimePicker
             value={selectedTime}
             mode="time"
@@ -133,7 +156,7 @@ const FirstLoginScreen = (props) => {
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleTimePickerConfirm}
           />
-        )}
+        )} */}
         <TouchableOpacity style={styles.addButton} onPress={handleAddHorario}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
@@ -153,6 +176,19 @@ const FirstLoginScreen = (props) => {
         />
 
         <Text style={styles.label}>Cantidad de sillas</Text>
+        <View style={styles.sillasContainer}>
+          <TouchableOpacity style={styles.deleteButton} onPress={handleRemoveSilla}>
+            <Text style={styles.deleteButtonText}>-</Text>
+          </TouchableOpacity>
+          <View style={styles.sillas}>
+            <Text>{sillas}</Text>
+          </View>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddSilla}>
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+            
+        {/* <Text style={styles.label}>Cantidad de sillas</Text>
         <TouchableOpacity style={styles.sillas} onPress={() => setShowSillas(!showSillas)}>
           <Text>{sillas}</Text>
         </TouchableOpacity>
@@ -161,7 +197,7 @@ const FirstLoginScreen = (props) => {
           {showSillas && (
           <Picker
             selectedValue={sillas}
-            style={styles.picker}
+            // style={styles.picker}
             onValueChange={(itemValue, itemIndex) => setSillas(itemValue)}
           >
             <Picker.Item label="1" value={1} />
@@ -176,12 +212,17 @@ const FirstLoginScreen = (props) => {
             <Picker.Item label="10" value={10} />
 
           </Picker>)}
-        </View>
+        </View> */}
       </View>
-      <View style={styles.updateDocumentButton}>
-        <Button title="Actualizar perfil" onPress={handleCreateDocument} />  
+      <View style={styles.editButtonsContainer}>
+        <TouchableOpacity style={styles.cancelEditButton} onPress={handleCancel}>
+            <Text style={styles.cancelEditButtonText}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.editButton} onPress={handleCreateDocument}>
+            <Text style={styles.editButtonText}>Actualizar perfil</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -216,6 +257,11 @@ const styles = StyleSheet.create({
     alignContent: 'center', 
     textAlign: 'center',
     textAlignVertical: 'center',
+    alignItems: 'center',
+  },
+  sillasContainer: {
+    flexDirection: 'row',
+    gap: 10,
     alignItems: 'center',
   },
   sillas: {
@@ -319,6 +365,45 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
+  editButton: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginTop: 20,
+    flexGrow: 1,
+    // alignSelf: 'center',
+   },
+   cancelEditButton: {
+    backgroundColor: 'transparent',
+    borderColor: 'white',
+    borderWidth: 2,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginTop: 20,
+    flexGrow: 1,
+    // alignSelf: 'center',
+   },
+    editButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#f08080',
+        textAlign: 'center',
+    },
+    cancelEditButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+    },
+    editButtonsContainer: {
+        width: '80%',
+        flexDirection: 'row',
+        alignSelf: 'center',
+        gap: 10,
+        marginBottom: 20,
+    }
 });
 
 export default FirstLoginScreen;
