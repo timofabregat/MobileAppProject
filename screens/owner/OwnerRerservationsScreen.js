@@ -35,25 +35,6 @@ const OwnerReservationsScreen = () => {
         }, [])
     )
 
-    // useEffect(() => {
-    //     const fetchReservations = async () => {
-    //         try {
-    //             const reservationsDocs = await PeluqueriaService.getReservationsForPeluqueria(auth.currentUser.uid);
-    //             const reservations = reservationsDocs.map((reservation) => {
-    //                 return {
-    //                     ...reservation.data(),
-    //                     id: reservation.id,
-    //                 };
-    //             });
-    //             setReservations(reservations);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-
-    //     fetchReservations();
-    // }, []);
-
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Reservas</Text>
