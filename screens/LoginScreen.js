@@ -50,7 +50,6 @@ const LoginScreen = (props) => {
 
   return (
     <>
-      {isLoading ? <AppLoader/> : null}
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
           <View style={styles.logoContainer}>

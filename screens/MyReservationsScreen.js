@@ -32,17 +32,6 @@ const MyReservationsScreen = () => {
     <>
       {isLoading ? <AppLoader/> : null}
       <View style={styles.container}>
-        {/* <View style={styles.content}>
-          {reservas.map((reserva) => (
-            <View key={reserva.id} style={styles.reservaContainer}>
-              <Text style={styles.peluqueria}>{reserva.peluqueria.name}</Text>
-              <Text style={styles.infoText}>Dirección: {reserva.peluqueria.direccion}</Text>
-              <Text style={styles.infoText}>Teléfono: {reserva.phone}</Text>
-              <Text style={styles.infoText}>Fecha: {reserva.fecha}</Text>
-              <Text style={styles.infoText}>Hora: {reserva.hora}</Text>
-            </View>
-          ))}
-        </View> */}
 
         <View style={styles.content}>
           <FlatList
@@ -59,21 +48,6 @@ const MyReservationsScreen = () => {
             }
             showsVerticalScrollIndicator={false}
           />
-        </View>
-
-        <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
-            <FontAwesome name="scissors" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Peluquerías</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
-            <FontAwesome name="calendar" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Mis Reservas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
-            <FontAwesome name="user" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Perfil</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </>

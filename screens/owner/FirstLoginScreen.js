@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Platform, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { setDoc } from '@firebase/firestore';
@@ -80,83 +80,85 @@ const FirstLoginScreen = (props) => {
     );
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.label}>Dirección</Text>
-        <TextInput
-          style={styles.input}
-          value={direccion}
-          onChangeText={setDireccion}
-        />
-
-        <Text style={styles.label}>Horarios</Text>
-        {horarios.map((horario, index) => (
-          <View key={index} style={styles.horarioContainer}>
-            <View style={styles.horarioRow}>
-              <TouchableOpacity
-                style={styles.horarioInput}
-                onPress={() => handleHorarioChange(index, 'inicio')}
-              >
-                <Text>{horario.inicio || 'Seleccione inicio'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.horarioInput}
-                onPress={() => handleHorarioChange(index, 'fin')}
-              >
-                <Text>{horario.fin || 'Seleccione fin'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleRemoveHorario(index)}
-              >
-                <Text style={styles.deleteButtonText}>-</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-        {showTimePicker && (
-          <DateTimePicker
-            value={selectedTime} // Use selectedTime from state instead of always initializing with new Date()
-            mode="time"
-            is24Hour={true}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleTimePickerConfirm}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.label}>Dirección</Text>
+          <TextInput
+            style={styles.input}
+            value={direccion}
+            onChangeText={setDireccion}
           />
-        )}
-        <TouchableOpacity style={styles.addButton} onPress={handleAddHorario}>
-          <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
 
-        <Text style={styles.label}>Nombre</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-        />
+          <Text style={styles.label}>Horarios</Text>
+          {horarios.map((horario, index) => (
+            <View key={index} style={styles.horarioContainer}>
+              <View style={styles.horarioRow}>
+                <TouchableOpacity
+                  style={styles.horarioInput}
+                  onPress={() => handleHorarioChange(index, 'inicio')}
+                >
+                  <Text>{horario.inicio || 'Seleccione inicio'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.horarioInput}
+                  onPress={() => handleHorarioChange(index, 'fin')}
+                >
+                  <Text>{horario.fin || 'Seleccione fin'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleRemoveHorario(index)}
+                >
+                  <Text style={styles.deleteButtonText}>-</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+          {showTimePicker && (
+            <DateTimePicker
+              value={selectedTime} // Use selectedTime from state instead of always initializing with new Date()
+              mode="time"
+              is24Hour={true}
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleTimePickerConfirm}
+            />
+          )}
+          <TouchableOpacity style={styles.addButton} onPress={handleAddHorario}>
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
 
-        <Text style={styles.label}>Teléfono</Text>
-        <TextInput
-          style={styles.input}
-          value={phone}
-          onChangeText={setPhone}
-        />
+          <Text style={styles.label}>Nombre</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+          />
 
-        <Text style={styles.label}>Cantidad de sillas</Text>
-        <TextInput
-          style={styles.input}
-          value={sillas}
-          onChangeText={setSillas}
-          keyboardType="numeric"
-        />
+          <Text style={styles.label}>Teléfono</Text>
+          <TextInput
+            style={styles.input}
+            value={phone}
+            onChangeText={setPhone}
+          />
 
-        <Button title="Crear Documento" onPress={handleCreateDocument} />
+          <Text style={styles.label}>Cantidad de sillas</Text>
+          <TextInput
+            style={styles.input}
+            value={sillas}
+            onChangeText={setSillas}
+            keyboardType="numeric"
+          />
+
+          <Button title="Crear Documento" onPress={handleCreateDocument} />
+        </View>
       </View>
-
-      <View style={styles.bottomBar}>
-        {/* Bottom bar content */}
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

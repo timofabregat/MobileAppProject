@@ -54,21 +54,6 @@ const HomeScreen = () => {
             showsVerticalScrollIndicator={false}
           />
         </View>
-        {/* Barra inferior fija */}
-        <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('HomeScreen')}>
-            <FontAwesome name="scissors" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Peluquerías</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('MyReservationsScreen')}>
-            <FontAwesome name="calendar" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Mis Reservas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('ProfileScreen')}>
-            <FontAwesome name="user" size={24} color="black" />
-            <Text style={styles.bottomBarText}>Perfil</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </>
   );

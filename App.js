@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -44,7 +44,16 @@ const PeluqueriaTabs = ({ setEdit }) => (
 );
 
 const UserTabs = ({ setUserType }) => (
-  <Tab.Navigator>
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      tabBarButton: (props) => {
+        if(route.name == "ReservationScreen") {
+          return null
+        }
+        return <TouchableOpacity {...props} />
+      }
+    })}
+  >
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="My Reservations" component={MyReservationsScreen} />
     <Tab.Screen name="Profile">
