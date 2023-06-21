@@ -14,10 +14,13 @@ const HomeScreen = () => {
   const [salons, setSalons] = useState([]);
   const [reservar, setReservar] = useState(false);
   const [peluqueria, setPeluqueria] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchSalons = async () => {
+      setIsLoading(true)
       const querySnapshot = await getDocuments(getCollectionRef(db, 'Peluquerias'));
+      setIsLoading(false)
       const salonData = querySnapshot.docs.map((doc) => doc);
       setSalons(salonData);
     };
@@ -54,6 +57,7 @@ const HomeScreen = () => {
             showsVerticalScrollIndicator={false}
           />
         </View>
+        {isLoading && <AppLoader />}
       </View>
     </>
   );
