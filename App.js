@@ -54,8 +54,8 @@ const UserTabs = ({ setUserType }) => (
       }
     })}
   >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="My Reservations" component={MyReservationsScreen} />
+    <Tab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+    <Tab.Screen options={{ headerShown: false }} name="My Reservations" component={MyReservationsScreen} />
     <Tab.Screen name="Profile">
       {(props) => <ProfileScreen {...props} setUserType={setUserType} />}
     </Tab.Screen>
