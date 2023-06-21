@@ -27,11 +27,11 @@ const ProfileScreen = (props) => {
 
   const handleLogoutPress = () => {
     Alert.alert(
-      'Confirm Logout',
-      'Are you sure you want to logout?',
+      'Confirma cerrar sesión',
+      '¿Estás seguro que quieres cerrar sesión?',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', onPress: () => setUserType(null) },
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Cerrar sesión', onPress: () => setUserType(null) },
       ],
       { cancelable: true }
     );
@@ -67,18 +67,18 @@ const ProfileScreen = (props) => {
                 <Text style={styles.info}>{userData.email}</Text>
               </View>
               <View style={styles.infoContainer}>
-                <Text style={styles.label}>Phone:</Text>
+                <Text style={styles.label}>Celular:</Text>
                 <TextInput
                   style={styles.input}
                   value={phoneNumber}
                   onChangeText={handlePhoneNumberChange}
-                  placeholder="Enter your phone number"
+                  placeholder="Celular"
                   keyboardType="phone-pad"
                   onBlur={dismissKeyboard} // Cerrar el teclado cuando se pierde el foco del campo de entrada
                 />
               </View>
               <TouchableOpacity onPress={handlePhoneNumberUpdate} style={styles.button}>
-                <Text>Update</Text>
+                <Text>Actualizar</Text>
               </TouchableOpacity>
             </>
           )}
@@ -86,7 +86,7 @@ const ProfileScreen = (props) => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleLogoutPress} style={[styles.button, styles.buttonOutline]}>
-            <Text>Logout</Text>
+            <Text>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
       </View>
