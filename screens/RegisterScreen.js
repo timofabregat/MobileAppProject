@@ -88,7 +88,7 @@ const RegisterScreen = () => {
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Name"
+              placeholder="Nombre"
               style={styles.input}
               value={name}
               onChangeText={(text) => setName(text)}
@@ -101,14 +101,14 @@ const RegisterScreen = () => {
               autoCapitalize="none"
             />
             <TextInput
-              placeholder="Phone"
+              placeholder="Celular"
               style={styles.input}
               value={phone}
               onChangeText={(text) => setPhone(text)}
               keyboardType="numeric"
             />
             <TextInput
-              placeholder="Password"
+              placeholder="Contraseña"
               style={styles.input}
               value={password}
               onChangeText={(text) => setPassword(text)}
@@ -130,7 +130,7 @@ const RegisterScreen = () => {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleRegisterPress} style={styles.button}>
-              <Text style={styles.buttonText}>Register</Text>
+              <Text style={styles.buttonText}>Registrarse</Text>
             </TouchableOpacity>
           </View>
         </View>

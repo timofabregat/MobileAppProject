@@ -66,7 +66,7 @@ const LoginScreen = (props) => {
               autoCapitalize="none"
             />
             <TextInput
-              placeholder="Password"
+              placeholder="Contraseña"
               style={styles.input}
               value={password}
               onChangeText={text => setPassword(text)}
@@ -76,11 +76,11 @@ const LoginScreen = (props) => {
           </View>
           <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <TouchableOpacity onPress={handleLoginPress} style={styles.button}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
-              <Text style={styles.buttonOutlineText}>Register</Text>
+              <Text style={styles.buttonOutlineText}>Registrarse</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
           {isLoading && <AppLoader />}

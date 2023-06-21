@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: Platform.OS === 'android' ? 25 : 0, // Adjust for Android StatusBar
-        backgroundColor: '#fff',
+        backgroundColor: '#f08080',
     },
     title: {
         fontSize: 24,
