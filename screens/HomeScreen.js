@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { db, getCollectionRef, getDocuments } from '../firebase';
 import AppLoader from './AppLoader';
 import ReservationScreen from './ReservationScreen';
@@ -14,16 +14,21 @@ const HomeScreen = () => {
   const [salons, setSalons] = useState([]);
   const [reservar, setReservar] = useState(false);
   const [peluqueria, setPeluqueria] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchSalons = async () => {
-      const querySnapshot = await getDocuments(getCollectionRef(db, 'Peluquerias'));
-      const salonData = querySnapshot.docs.map((doc) => doc);
-      setSalons(salonData);
-    };
-
-    fetchSalons();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchSalons = async () => {
+        setIsLoading(true)
+        const querySnapshot = await getDocuments(getCollectionRef(db, 'Peluquerias'));
+        setIsLoading(false)
+        const salonData = querySnapshot.docs.map((doc) => doc);
+        setSalons(salonData);
+      };
+  
+      fetchSalons();
+    }, [])
+  )
 
   const handleReservaPress = (peluqueria) => {
     console.log(peluqueria);
@@ -54,6 +59,7 @@ const HomeScreen = () => {
             showsVerticalScrollIndicator={false}
           />
         </View>
+        {isLoading && <AppLoader />}
       </View>
     </>
   );

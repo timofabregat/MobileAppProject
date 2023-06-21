@@ -37,6 +37,7 @@ const LoginScreen = (props) => {
             );
         })
         .catch((error) => {
+          setIsLoading(false)
           Alert.alert('Error', error.message);
         });
     }
@@ -81,7 +82,8 @@ const LoginScreen = (props) => {
             <TouchableOpacity onPress={handleRegisterPress} style={[styles.button, styles.buttonOutline]}>
               <Text style={styles.buttonOutlineText}>Register</Text>
             </TouchableOpacity>
-            </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+          {isLoading && <AppLoader />}
         </View>
       </TouchableWithoutFeedback>
     </>

@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { auth } from '../firebase';
 import UserService from '../data/UserService';
+import AppLoader from './AppLoader';
 
 const ProfileScreen = (props) => {
   const { setUserType } = props;
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const user = await UserService.getUserInfo(auth.currentUser.uid);
-        setUserData(user.data());
-        setPhoneNumber(user.data().phone || '');
-      } catch (error) {
-        console.log('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          setIsLoading(true)
+          const user = await UserService.getUserInfo(auth.currentUser.uid);
+          setUserData(user.data());
+          setPhoneNumber(user.data().phone || '');
+          setIsLoading(false)
+        } catch (error) {
+          setIsLoading(false)
+          console.log('Error fetching user data:', error);
+        }
+      };
+  
+      fetchUserData();
+    },[])
+  )
 
   const handleLogoutPress = () => {
     Alert.alert(
@@ -89,6 +96,7 @@ const ProfileScreen = (props) => {
             <Text>Logout</Text>
           </TouchableOpacity>
         </View>
+        {isLoading && <AppLoader />}
       </View>
     </TouchableWithoutFeedback>
   );
