@@ -3,28 +3,37 @@ import { View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 're
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PeluqueriaService from '../../data/PeluqueriaService';
 import { auth } from '../../firebase';
+import { useFocusEffect } from '@react-navigation/native';
+import AppLoader from '../AppLoader';
+
 
 const OwnerReservationsScreen = () => {
     const [reservations, setReservations] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        const fetchReservations = async () => {
-            try {
-                const reservationsDocs = await PeluqueriaService.getReservationsForPeluqueria(auth.currentUser.uid);
-                const reservations = reservationsDocs.map((reservation) => {
-                    return {
-                        ...reservation.data(),
-                        id: reservation.id,
-                    };
-                });
-                setReservations(reservations);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchReservations();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchReservations = async () => {
+                try {
+                    setIsLoading(true)
+                    const reservationsDocs = await PeluqueriaService.getReservationsForPeluqueria(auth.currentUser.uid);
+                    const reservations = reservationsDocs.map((reservation) => {
+                        return {
+                            ...reservation.data(),
+                            id: reservation.id,
+                        };
+                    });
+                    setReservations(reservations);
+                    setIsLoading(false)
+                } catch (error) {
+                    setIsLoading(false)
+                    console.log(error);
+                }
+            };
+    
+            fetchReservations();
+        }, [])
+    )
 
     return (
         <SafeAreaView style={styles.container}>
@@ -56,6 +65,7 @@ const OwnerReservationsScreen = () => {
                     </View>
                 ))}
             </ScrollView>
+            {isLoading && <AppLoader />}
         </SafeAreaView>
     );
 };

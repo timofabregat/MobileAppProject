@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import UserService from '../data/UserService';
 import { auth } from '../firebase';
 import AppLoader from './AppLoader';
@@ -11,22 +11,24 @@ const MyReservationsScreen = () => {
   const [reservas, setReservas] = useState([]);
   const [isLoading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        // Fetch reservations data from the database
-        setLoading(true)
-        const reservationsData = await UserService.getReservationsForUser(auth.currentUser.uid);
-        setReservas(reservationsData);
-        setLoading(false)
-      } catch (error) {
-        console.log('Error fetching reservations:', error);
-        setLoading(false)
-      }
-    };
-
-    fetchReservations();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchReservations = async () => {
+        try {
+          // Fetch reservations data from the database
+          setLoading(true)
+          const reservationsData = await UserService.getReservationsForUser(auth.currentUser.uid);
+          setReservas(reservationsData);
+          setLoading(false)
+        } catch (error) {
+          console.log('Error fetching reservations:', error);
+          setLoading(false)
+        }
+      };
+  
+      fetchReservations();
+    }, [])
+  )
 
   return (
     <>
