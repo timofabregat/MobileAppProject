@@ -50,10 +50,12 @@ const ProfileScreen = (props) => {
 
   const handlePhoneNumberUpdate = async () => {
     try {
-      await UserService.updatePhoneNumber(auth.currentUser.uid, phoneNumber);
+      UserService.updatePhone(auth.currentUser.uid, phoneNumber).then(
+        Alert.alert("Se ha cambiado el número de teléfono")
+      )
       console.log('Phone number updated successfully!');
     } catch (error) {
-      console.log('Error updating phone number:', error);
+      Alert.alert(error)
     }
   };
 
