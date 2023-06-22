@@ -15,6 +15,7 @@ import FirstLoginScreen from './screens/owner/FirstLoginScreen';
 import BussinessInfoScreen from './screens/owner/BussinessInfoScreen';
 import OwnerReservationsScreen from './screens/owner/OwnerRerservationsScreen';
 import EditBussinessProfile from './screens/owner/EditBussinessProfile';
+import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,29 +39,75 @@ const AuthStack = ({ handleLoginSuccess }) => (
 
 const PeluqueriaTabs = ({ setEdit }) => (
   <Tab.Navigator>
-    <Tab.Screen options={{ headerShown: false }} name="BussinessInfoScreen" component={BussinessInfoScreen} />
-    <Tab.Screen options={{ headerShown: false }} name="OwnerReservationsScreen" component={OwnerReservationsScreen} />
-  </Tab.Navigator>
+  <Tab.Screen
+    name="Mi Peluquería"
+    component={BussinessInfoScreen}
+    options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="business-outline" color={color} size={size} />
+      ),
+      headerShown: false
+    }}
+  />
+  <Tab.Screen
+    name="Reservas"
+    component={OwnerReservationsScreen}
+    options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="calendar-outline" color={color} size={size} />
+      ),
+      headerShown: false
+    }}
+  />
+</Tab.Navigator>
 );
 
 const UserTabs = ({ setUserType }) => (
   <Tab.Navigator
-    screenOptions={({route}) => ({
-      tabBarButton: (props) => {
-        if(route.name == "ReservationScreen") {
-          return null
-        }
-        return <TouchableOpacity {...props} />
+  screenOptions={({ route }) => ({
+    tabBarButton: (props) => {
+      if (route.name === "ReservationScreen") {
+        return null;
       }
-    })}
+      return <TouchableOpacity {...props} />;
+    },
+    tabBarIcon: ({ color, size }) => {
+      let iconName;
+
+      if (route.name === "Peluquerías") {
+        iconName = "home-outline";
+      } else if (route.name === "Mis Reservas") {
+        iconName = "calendar-outline";
+      } else if (route.name === "Perfil") {
+        iconName = "person-outline";
+      }
+
+      return <Ionicons name={iconName} color={color} size={size} />;
+    }
+  })}
+>
+  <Tab.Screen
+    name="Peluquerías"
+    component={HomeScreen}
+    options={{ headerShown: true }}
+  />
+  <Tab.Screen
+    name="Mis Reservas"
+    component={MyReservationsScreen}
+    options={{ headerShown: true }}
+  />
+  <Tab.Screen
+    name="Perfil"
+    options={{ headerShown: true }}
   >
-    <Tab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
-    <Tab.Screen options={{ headerShown: false }} name="My Reservations" component={MyReservationsScreen} />
-    <Tab.Screen name="Profile">
-      {(props) => <ProfileScreen {...props} setUserType={setUserType} />}
-    </Tab.Screen>
-    <Tab.Screen isVisible={false} name="ReservationScreen" component={ReservationScreen} />
-  </Tab.Navigator>
+    {(props) => <ProfileScreen {...props} setUserType={setUserType} />}
+  </Tab.Screen>
+  <Tab.Screen
+    name="ReservationScreen"
+    component={ReservationScreen}
+    options={{ tabBarVisible: false }}
+  />
+</Tab.Navigator>
 );
 
 export default function App() {

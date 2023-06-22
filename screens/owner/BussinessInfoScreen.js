@@ -1,30 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect} from "@react-navigation/native";
 import UserService from '../../data/UserService';
 import { auth } from '../../firebase';
 import EditBussinessProfile from './EditBussinessProfile';
+
 
 const BusinessInfoScreen = () => {
     const navigation = useNavigation();
     const [businessData, setBusinessData] = useState(null);
     const [edit, setEdit] = useState(false);
     const [businesses, setBusinesses] = useState(null);
+    
+    
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const businesses = (await UserService.getPeluqueriaInfo(auth.currentUser.uid));
-                setBusinesses(businesses);
-                const businessData = businesses.data();
-                setBusinessData(businessData);
-            } catch (error) {
-                console.error('Error fetching business data:', error);
-            }
-        };
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchData = async () => {
+                try {
+                    const businesses = (await UserService.getPeluqueriaInfo(auth.currentUser.uid));
+                    setBusinesses(businesses);
+                    const businessData = businesses.data();
+                    setBusinessData(businessData);
+                } catch (error) {
+                    console.error('Error fetching business data:', error);
+                }
+            };
+    
+            fetchData();
+        },[edit])
+    )
 
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const businesses = (await UserService.getPeluqueriaInfo(auth.currentUser.uid));
+    //             setBusinesses(businesses);
+    //             const businessData = businesses.data();
+    //             setBusinessData(businessData);
+    //         } catch (error) {
+    //             console.error('Error fetching business data:', error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
 
     if (!businessData) {
         return null;

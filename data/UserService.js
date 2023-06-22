@@ -72,13 +72,30 @@ const assignReservationToUser = async (uid, reservaRef) => {
     console.log('Reserva Asignada al Usuario ', uid)
 }
 
+const updatePhone = async (uid, newPhone) => {
+    const userRef = doc(db, 'Users', uid);
+    const userSnapshot = await getDoc(userRef);
+    const currentPhone = userSnapshot.get('phone');
+  
+    if (currentPhone === newPhone) {
+      // No changes needed if the new phone is the same as the current phone
+      return
+    }
+  
+    console.log('Phone number updated successfully.');
+    // Update the phone number in the user document
+    return await setDoc(userRef, { phone: newPhone }, { merge: true });
+  
+  };
+
 const UserService = {
     getUserInfo,
     getReservationsForUser,
     getPeluqueriaInfo,
     getUserType,
     cancelUserReservation,
-    assignReservationToUser
+    assignReservationToUser,
+    updatePhone
 }
 
 export default UserService;

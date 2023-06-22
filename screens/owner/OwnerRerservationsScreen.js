@@ -5,22 +5,27 @@ import PeluqueriaService from '../../data/PeluqueriaService';
 import { auth } from '../../firebase';
 import { useFocusEffect } from '@react-navigation/native';
 import AppLoader from '../AppLoader';
+import UserService from '../../data/UserService';
 
 
 const OwnerReservationsScreen = () => {
     const [reservations, setReservations] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
+    const [sillas, setSillas] = useState(0)
 
     useFocusEffect(
         React.useCallback(() => {
             const fetchReservations = async () => {
                 try {
                     setIsLoading(true)
+                    const peluqueria = await UserService.getPeluqueriaInfo(auth.currentUser.uid)
+                    setSillas(peluqueria.data().sillas)
                     const reservationsDocs = await PeluqueriaService.getReservationsForPeluqueria(auth.currentUser.uid);
                     const reservations = reservationsDocs.map((reservation) => {
                         return {
                             ...reservation.data(),
                             id: reservation.id,
+                            reservas: sillas-reservation.data().lugares + '/' + peluqueria.data().sillas
                         };
                     });
                     setReservations(reservations);
@@ -59,8 +64,8 @@ const OwnerReservationsScreen = () => {
                             </View>
                         </View>
                         <View style={styles.lugaresContainer}>
-                            <Text style={styles.lugaresLabel}>Lugares</Text>
-                            <Text style={styles.lugaresNumber}>{reservation.lugares}</Text>
+                            <Text style={styles.lugaresLabel}>Reservas</Text>
+                            <Text style={styles.lugaresNumber}>{ reservation.reservas}</Text>
                         </View>
                     </View>
                 ))}
@@ -74,10 +79,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: Platform.OS === 'android' ? 25 : 0, // Adjust for Android StatusBar
-        backgroundColor: '#fff',
+        backgroundColor: '#f08080',
     },
     title: {
         fontSize: 24,
+        color: 'white',
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',

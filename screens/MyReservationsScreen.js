@@ -90,12 +90,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
-    marginTop: '10%',
-    justifyContent: 'top-center',
+    paddingHorizontal: 20,
   },
   reservaContainer: {
-    marginBottom: 16,
+    marginVertical: 16,
     padding: 16,
     backgroundColor: '#F0F0F0',
     borderRadius: 8,
@@ -115,6 +113,7 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: 16,
+    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -122,24 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: 'white'
-  },
-  bottomBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#cccccc',
-    paddingVertical: "4.5%",
-  },
-  bottomBarButton: {
-    alignItems: 'center',
-    flex: 1, 
-  },
-  bottomBarText: {
-    fontSize: 12,
-    marginTop: 5,
-  },
+  }
 });
 
 
